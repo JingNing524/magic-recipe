@@ -68,3 +68,60 @@ class Recipe:
             print(f"Notes: {self.notes}")
         if self.image_path:
             print(f"Image Path: {self.image_path}")
+
+
+class RecipeManager:
+    def __init__(self):
+        self.recipes = []
+
+    def add_recipe(self, recipe):
+        self.recipes.append(recipe)
+
+    def remove_recipe(self, recipe_title):
+        self.recipes = [r for r in self.recipes if r.title.lower() != recipe_title.lower()]
+
+    def search_recipes(self, query):
+        """Search by title or ingredient name"""
+        query = query.lower()
+        results = []
+        for recipe in self.recipes:
+            if query in recipe.title.lower():
+                results.append(recipe)
+            elif any(query in ing.name.lower() for ing in recipe.ingredients):
+                results.append(recipe)
+        return results
+
+    def filter_recipes(self, cuisine=None, category=None, rating=None):
+        results = self.recipes
+        if cuisine:
+            results = [r for r in results if r.cuisine.lower() == cuisine.lower()]
+        if category:
+            results = [r for r in results if r.category.lower() == category.lower()]
+        if rating:
+            results = [r for r in results if r.rating and r.rating >= rating]
+        return results
+
+    def display_all_recipes(self):
+        if not self.recipes:
+            print("No recipes found.")
+        else:
+            print("Recipes:")
+            for i, recipe in enumerate(self.recipes, 1):
+                print(f"{i}. {recipe.title}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
