@@ -166,6 +166,27 @@ cake.display()
 
 
 
+manager = RecipeManager()
+
+
+manager.add_recipe(cake)  
+
+
+manager.display_all_recipes()
+
+
+results = manager.search_recipes("cake")
+for r in results:
+    r.display()
+
+
+filtered = manager.filter_recipes(cuisine="American")
+for r in filtered:
+    r.display()
+
+
+
+
 
 
 
