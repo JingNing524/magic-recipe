@@ -139,6 +139,31 @@ class MealPlanner:
             for recipe in recipes:
                 print(f" - {recipe.title}")
                 
+                
+from collections import defaultdict
+
+class ShoppingListGenerator:
+    def generate_list(self, recipes):
+        """Takes a list of Recipe objects and returns a consolidated shopping list."""
+        shopping_list = defaultdict(lambda: defaultdict(float))  # name: {unit: quantity}
+
+        for recipe in recipes:
+            for ing in recipe.ingredients:
+                shopping_list[ing.name][ing.unit] += ing.quantity
+
+        # Return as a formatted list
+        formatted_list = []
+        for name, units in shopping_list.items():
+            for unit, qty in units.items():
+                formatted_list.append(f"{qty:.2f} {unit} {name}")
+        return formatted_list
+
+    def display_list(self, shopping_list):
+        print("\n🛒 Shopping List:")
+        for item in shopping_list:
+            print(f" - {item}")
+
+                
 
 
 
