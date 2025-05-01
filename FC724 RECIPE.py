@@ -215,7 +215,10 @@ planner.add_meal("2025-05-01", cake)
 planner.display_schedule()
 
 
-
+recipes_for_today = planner.get_meals_for_date("2025-05-01")
+shopper = ShoppingListGenerator()
+list_items = shopper.generate_list(recipes_for_today)
+shopper.display_list(list_items)
 
 
 
