@@ -112,6 +112,8 @@ class RecipeManager:
 
 from collections import defaultdict
 
+
+
 class MealPlanner:
     def __init__(self):
         self.planned_meals = defaultdict(list)  # date: [Recipe, Recipe...]
@@ -139,6 +141,27 @@ class MealPlanner:
                 
 
 
+
+
+flour = Ingredient("flour", 2, "cups")
+sugar = Ingredient("sugar", 1, "cup")
+
+cake = Recipe(
+    title="Simple Cake",
+    description="A quick and easy cake recipe.",
+    servings=4,
+    cuisine="American",
+    category="Dessert"
+)
+
+
+cake.add_ingredient(flour)
+cake.add_ingredient(sugar)
+cake.add_step("Preheat the oven to 350°F (175°C).")
+cake.add_step("Mix all ingredients together.")
+cake.add_step("Pour into a pan and bake for 30 minutes.")
+
+cake.display()
 
 
 
