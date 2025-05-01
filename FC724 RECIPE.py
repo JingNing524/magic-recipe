@@ -185,6 +185,14 @@ for r in filtered:
     r.display()
 
 
+planner = MealPlanner()
+planner.add_meal("2025-05-01", cake)
+planner.display_schedule()
+
+
+
+
+
 
 
 
