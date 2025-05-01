@@ -110,6 +110,35 @@ class RecipeManager:
                 print(f"{i}. {recipe.title}")
 
 
+from collections import defaultdict
+
+class MealPlanner:
+    def __init__(self):
+        self.planned_meals = defaultdict(list)  # date: [Recipe, Recipe...]
+
+    def add_meal(self, date, recipe):
+        """Adds a recipe to a specific date (date should be a string or datetime object)."""
+        self.planned_meals[date].append(recipe)
+
+    def remove_meal(self, date, recipe_title):
+        """Removes a recipe by title from the date's meal list."""
+        self.planned_meals[date] = [
+            r for r in self.planned_meals[date] if r.title.lower() != recipe_title.lower()
+        ]
+        if not self.planned_meals[date]:  # clean up if empty
+            del self.planned_meals[date]
+
+    def get_meals_for_date(self, date):
+        return self.planned_meals.get(date, [])
+
+    def display_schedule(self):
+        for date, recipes in sorted(self.planned_meals.items()):
+            print(f"\n📅 {date}:")
+            for recipe in recipes:
+                print(f" - {recipe.title}")
+                
+
+
 
 
 
