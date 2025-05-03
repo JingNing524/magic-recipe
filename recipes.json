@@ -27,7 +27,10 @@
       "Brown the ground beef.",
       "Mix in tomato sauce and simmer.",
       "Combine with spaghetti and serve."
-    ]
+    ],
+    "rating": null,
+    "notes": null,
+    "image_path": null
   },
   {
     "title": "microwave scrambled eggs",
@@ -63,6 +66,225 @@
       "Microwave: Microwave on high for 30 seconds.",
       "Stir: Take the mug out and stir the eggs with a fork.",
       "Microwave again: Microwave for another 30-60 seconds, or until the eggs look mostly set but are still a little moist. Cooking time can vary depending on your microwave."
-    ]
+    ],
+    "rating": null,
+    "notes": null,
+    "image_path": null
+  },
+  {
+    "title": "Spaghetti Bolognese",
+    "description": "A classic Italian pasta dish.",
+    "servings": 4,
+    "cuisine": "Italian",
+    "category": "Dinner",
+    "ingredients": [
+      {
+        "name": "Spaghetti",
+        "quantity": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Ground beef",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Tomato sauce",
+        "quantity": 1,
+        "unit": "cup"
+      }
+    ],
+    "steps": [
+      "Cook spaghetti until al dente.",
+      "Brown the ground beef.",
+      "Mix in tomato sauce and simmer.",
+      "Combine with spaghetti and serve."
+    ],
+    "rating": null,
+    "notes": null,
+    "image_path": null
+  },
+  {
+    "title": "microwave scrambled eggs",
+    "description": "",
+    "servings": 1,
+    "cuisine": "",
+    "category": "",
+    "ingredients": [
+      {
+        "name": "eggs",
+        "quantity": 2.0,
+        "unit": ""
+      },
+      {
+        "name": "milk (optional, for creaminess)",
+        "quantity": 1.0,
+        "unit": "tablespoon"
+      },
+      {
+        "name": "salt and pepper",
+        "quantity": 1.0,
+        "unit": ""
+      },
+      {
+        "name": "Small knob of butter or a tiny spray of cooking oil",
+        "quantity": 1.0,
+        "unit": ""
+      }
+    ],
+    "steps": [
+      "Prep the mug: If you like, put the butter in a microwave-safe mug and microwave for about 10 seconds until melted. Alternatively, lightly spray the mug with cooking oil.",
+      "Whisk eggs: Crack the eggs into the mug. Add milk (if using), salt, and pepper. Whisk everything together with a fork until the yolks and whites are combined.",
+      "Microwave: Microwave on high for 30 seconds.",
+      "Stir: Take the mug out and stir the eggs with a fork.",
+      "Microwave again: Microwave for another 30-60 seconds, or until the eggs look mostly set but are still a little moist. Cooking time can vary depending on your microwave."
+    ],
+    "rating": null,
+    "notes": null,
+    "image_path": null
+  },
+  {
+    "title": "Spaghetti Bolognese",
+    "description": "A classic Italian pasta dish.",
+    "servings": 4,
+    "cuisine": "Italian",
+    "category": "Dinner",
+    "ingredients": [
+      {
+        "name": "Spaghetti",
+        "quantity": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Ground beef",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Tomato sauce",
+        "quantity": 1,
+        "unit": "cup"
+      }
+    ],
+    "steps": [
+      "Cook spaghetti until al dente.",
+      "Brown the ground beef.",
+      "Mix in tomato sauce and simmer.",
+      "Combine with spaghetti and serve."
+    ],
+    "rating": null,
+    "notes": null,
+    "image_path": null
+  },
+  {
+    "title": "microwave scrambled eggs",
+    "description": "",
+    "servings": 1,
+    "cuisine": "",
+    "category": "",
+    "ingredients": [
+      {
+        "name": "eggs",
+        "quantity": 2.0,
+        "unit": ""
+      },
+      {
+        "name": "milk (optional, for creaminess)",
+        "quantity": 1.0,
+        "unit": "tablespoon"
+      },
+      {
+        "name": "salt and pepper",
+        "quantity": 1.0,
+        "unit": ""
+      },
+      {
+        "name": "Small knob of butter or a tiny spray of cooking oil",
+        "quantity": 1.0,
+        "unit": ""
+      }
+    ],
+    "steps": [
+      "Prep the mug: If you like, put the butter in a microwave-safe mug and microwave for about 10 seconds until melted. Alternatively, lightly spray the mug with cooking oil.",
+      "Whisk eggs: Crack the eggs into the mug. Add milk (if using), salt, and pepper. Whisk everything together with a fork until the yolks and whites are combined.",
+      "Microwave: Microwave on high for 30 seconds.",
+      "Stir: Take the mug out and stir the eggs with a fork.",
+      "Microwave again: Microwave for another 30-60 seconds, or until the eggs look mostly set but are still a little moist. Cooking time can vary depending on your microwave."
+    ],
+    "rating": null,
+    "notes": null,
+    "image_path": null
+  },
+  {
+    "title": "Spaghetti Bolognese",
+    "description": "A classic Italian pasta dish.",
+    "servings": 4,
+    "cuisine": "Italian",
+    "category": "Dinner",
+    "ingredients": [
+      {
+        "name": "Spaghetti",
+        "quantity": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Ground beef",
+        "quantity": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Tomato sauce",
+        "quantity": 1,
+        "unit": "cup"
+      }
+    ],
+    "steps": [
+      "Cook spaghetti until al dente.",
+      "Brown the ground beef.",
+      "Mix in tomato sauce and simmer.",
+      "Combine with spaghetti and serve."
+    ],
+    "rating": null,
+    "notes": null,
+    "image_path": null
+  },
+  {
+    "title": "microwave scrambled eggs",
+    "description": "",
+    "servings": 1,
+    "cuisine": "",
+    "category": "",
+    "ingredients": [
+      {
+        "name": "eggs",
+        "quantity": 2.0,
+        "unit": ""
+      },
+      {
+        "name": "milk (optional, for creaminess)",
+        "quantity": 1.0,
+        "unit": "tablespoon"
+      },
+      {
+        "name": "salt and pepper",
+        "quantity": 1.0,
+        "unit": ""
+      },
+      {
+        "name": "Small knob of butter or a tiny spray of cooking oil",
+        "quantity": 1.0,
+        "unit": ""
+      }
+    ],
+    "steps": [
+      "Prep the mug: If you like, put the butter in a microwave-safe mug and microwave for about 10 seconds until melted. Alternatively, lightly spray the mug with cooking oil.",
+      "Whisk eggs: Crack the eggs into the mug. Add milk (if using), salt, and pepper. Whisk everything together with a fork until the yolks and whites are combined.",
+      "Microwave: Microwave on high for 30 seconds.",
+      "Stir: Take the mug out and stir the eggs with a fork.",
+      "Microwave again: Microwave for another 30-60 seconds, or until the eggs look mostly set but are still a little moist. Cooking time can vary depending on your microwave."
+    ],
+    "rating": null,
+    "notes": null,
+    "image_path": null
   }
 ]
