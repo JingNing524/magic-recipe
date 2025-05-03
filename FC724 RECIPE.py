@@ -1,6 +1,11 @@
 #Interactive Recipe Manager
 
 
+import json
+import tkinter as tk
+from tkinter import simpledialog, messagebox, ttk
+from collections import defaultdict
+
 class Ingredient:
     def __init__(self, name, quantity, unit):
         self.name = name
@@ -38,8 +43,6 @@ class Recipe:
     def remove_step(self, step_number):
         if 0 <= step_number < len(self.steps):
             self.steps.pop(step_number)
-        else:
-            print("Invalid step number.")
 
     def update_servings(self, new_servings):
         if new_servings <= 0:
@@ -49,28 +52,6 @@ class Recipe:
         for ing in self.ingredients:
             ing.quantity *= factor
         self.servings = new_servings
-
-    def display(self):
-        print(f"\n--- {self.title} ---")
-        print(f"Description: {self.description}")
-        print(f"Servings: {self.servings}")
-        print(f"Cuisine: {self.cuisine}")
-        print(f"Category: {self.category}")
-        print("\nIngredients:")
-        for ing in self.ingredients:
-            print(f" - {ing.display()}")
-        print("\nSteps:")
-        for idx, step in enumerate(self.steps, 1):
-            print(f"{idx}. {step}")
-        if self.rating is not None:
-            print(f"\nRating: {self.rating}/5")
-        if self.notes:
-            print(f"Notes: {self.notes}")
-        if self.image_path:
-            print(f"Image Path: {self.image_path}")
-
-
-import json
 
 class RecipeManager:
     def __init__(self):
@@ -89,6 +70,9 @@ class RecipeManager:
                     for i in r.ingredients
                 ],
                 "steps": r.steps,
+                "rating": r.rating,
+                "notes": r.notes,
+                "image_path": r.image_path,
             }
             for r in self.recipes
         ]
@@ -97,7 +81,10 @@ class RecipeManager:
         for r in data:
             recipe = Recipe(
                 r["title"], r["description"], r["servings"],
-                r["cuisine"], r["category"]
+                r["cuisine"], r["category"],
+                rating=r.get("rating"),
+                notes=r.get("notes"),
+                image_path=r.get("image_path")
             )
             for ing in r["ingredients"]:
                 recipe.add_ingredient(Ingredient(ing["name"], ing["quantity"], ing["unit"]))
@@ -115,8 +102,7 @@ class RecipeManager:
                 data = json.load(f)
                 self.from_dict(data)
         except FileNotFoundError:
-            pass         
-    
+            pass
 
     def add_recipe(self, recipe):
         self.recipes.append(recipe)
@@ -125,7 +111,6 @@ class RecipeManager:
         self.recipes = [r for r in self.recipes if r.title.lower() != recipe_title.lower()]
 
     def search_recipes(self, query):
-        """Search by title or ingredient name"""
         query = query.lower()
         results = []
         for recipe in self.recipes:
@@ -145,77 +130,34 @@ class RecipeManager:
             results = [r for r in results if r.rating and r.rating >= rating]
         return results
 
-    def display_all_recipes(self):
-        if not self.recipes:
-            print("No recipes found.")
-        else:
-            print("Recipes:")
-            for i, recipe in enumerate(self.recipes, 1):
-                print(f"{i}. {recipe.title}")
-
-
-
-
-
-from collections import defaultdict
-
-
-
 class MealPlanner:
     def __init__(self):
-        self.planned_meals = defaultdict(list)  # date: [Recipe, Recipe...]
+        self.planned_meals = defaultdict(list)
 
     def add_meal(self, date, recipe):
-        """Adds a recipe to a specific date (date should be a string or datetime object)."""
         self.planned_meals[date].append(recipe)
 
     def remove_meal(self, date, recipe_title):
-        """Removes a recipe by title from the date's meal list."""
         self.planned_meals[date] = [
             r for r in self.planned_meals[date] if r.title.lower() != recipe_title.lower()
         ]
-        if not self.planned_meals[date]:  # clean up if empty
+        if not self.planned_meals[date]:
             del self.planned_meals[date]
 
     def get_meals_for_date(self, date):
         return self.planned_meals.get(date, [])
 
-    def display_schedule(self):
-        for date, recipes in sorted(self.planned_meals.items()):
-            print(f"\n📅 {date}:")
-            for recipe in recipes:
-                print(f" - {recipe.title}")
-                
-                
-from collections import defaultdict
-
 class ShoppingListGenerator:
     def generate_list(self, recipes):
-        """Takes a list of Recipe objects and returns a consolidated shopping list."""
-        shopping_list = defaultdict(lambda: defaultdict(float))  # name: {unit: quantity}
-
+        shopping_list = defaultdict(lambda: defaultdict(float))
         for recipe in recipes:
             for ing in recipe.ingredients:
                 shopping_list[ing.name][ing.unit] += ing.quantity
-
-        # Return as a formatted list
         formatted_list = []
         for name, units in shopping_list.items():
             for unit, qty in units.items():
                 formatted_list.append(f"{qty:.2f} {unit} {name}")
         return formatted_list
-
-    def display_list(self, shopping_list):
-        print("\n🛒 Shopping List:")
-        for item in shopping_list:
-            print(f" - {item}")
-
-                
-
-
-
-import tkinter as tk
-from tkinter import simpledialog, messagebox, ttk
 
 class RecipeApp:
     def __init__(self, root):
@@ -229,24 +171,20 @@ class RecipeApp:
         self.manager.load_from_file()
         self.refresh_recipe_list()
 
-
     def setup_gui(self):
         self.main_frame = ttk.Frame(self.root, padding=10)
         self.main_frame.pack(fill="both", expand=True)
 
-        # Recipe List
         self.recipe_listbox = tk.Listbox(self.main_frame, height=10)
         self.recipe_listbox.grid(row=0, column=0, rowspan=6, padx=10)
         self.recipe_listbox.bind('<<ListboxSelect>>', self.display_recipe)
 
-        # Buttons
         ttk.Button(self.main_frame, text="Add Recipe", command=self.add_recipe).grid(row=0, column=1, sticky="ew")
         ttk.Button(self.main_frame, text="Plan Meal", command=self.plan_meal).grid(row=1, column=1, sticky="ew")
         ttk.Button(self.main_frame, text="View Meal Plan", command=self.view_plan).grid(row=2, column=1, sticky="ew")
         ttk.Button(self.main_frame, text="Shopping List", command=self.generate_shopping_list).grid(row=3, column=1, sticky="ew")
         ttk.Button(self.main_frame, text="Exit", command=self.root.quit).grid(row=4, column=1, sticky="ew")
 
-        # Display Area
         self.recipe_text = tk.Text(self.main_frame, width=70, height=25)
         self.recipe_text.grid(row=6, column=0, columnspan=2, pady=(10, 0))
 
@@ -259,10 +197,17 @@ class RecipeApp:
         title = simpledialog.askstring("Title", "Recipe title:")
         if not title:
             return
+        if any(r.title.lower() == title.lower() for r in self.manager.recipes):
+            messagebox.showerror("Error", "Recipe title already exists.")
+            return
         desc = simpledialog.askstring("Description", "Description:")
         servings = simpledialog.askinteger("Servings", "Servings:")
         cuisine = simpledialog.askstring("Cuisine", "Cuisine type:")
         category = simpledialog.askstring("Category", "Meal category:")
+
+        if not all([desc, servings, cuisine, category]):
+            messagebox.showerror("Error", "Missing required fields.")
+            return
 
         recipe = Recipe(title, desc, servings, cuisine, category)
 
@@ -270,11 +215,13 @@ class RecipeApp:
             name = simpledialog.askstring("Ingredient", "Name:")
             qty = simpledialog.askfloat("Ingredient", "Quantity:")
             unit = simpledialog.askstring("Ingredient", "Unit:")
-            recipe.add_ingredient(Ingredient(name, qty, unit))
+            if name and qty and unit:
+                recipe.add_ingredient(Ingredient(name, qty, unit))
 
         while messagebox.askyesno("Step", "Add step?"):
             step = simpledialog.askstring("Step", "Description:")
-            recipe.add_step(step)
+            if step:
+                recipe.add_step(step)
 
         self.manager.add_recipe(recipe)
         self.refresh_recipe_list()
@@ -286,15 +233,19 @@ class RecipeApp:
         index = selected[0]
         recipe = self.manager.recipes[index]
         self.recipe_text.delete(1.0, tk.END)
-        self.recipe_text.insert(tk.END, f"📋 {recipe.title}\n")
+        self.recipe_text.insert(tk.END, f"\U0001F4CB {recipe.title}\n")
         self.recipe_text.insert(tk.END, f"{recipe.description}\n\n")
         self.recipe_text.insert(tk.END, f"Servings: {recipe.servings} | Cuisine: {recipe.cuisine} | Category: {recipe.category}\n")
-        self.recipe_text.insert(tk.END, "\n🧂 Ingredients:\n")
+        self.recipe_text.insert(tk.END, "\n\U0001F9C2 Ingredients:\n")
         for i in recipe.ingredients:
             self.recipe_text.insert(tk.END, f" - {i.display()}\n")
-        self.recipe_text.insert(tk.END, "\n👩🏼‍🌾🍳 Steps:\n")
+        self.recipe_text.insert(tk.END, "\n\U0001F469\u200D\U0001F33E\U0001F373 Steps:\n")
         for idx, s in enumerate(recipe.steps, 1):
             self.recipe_text.insert(tk.END, f"{idx}. {s}\n")
+        if recipe.rating is not None:
+            self.recipe_text.insert(tk.END, f"\nRating: {recipe.rating}/5\n")
+        if recipe.notes:
+            self.recipe_text.insert(tk.END, f"Notes: {recipe.notes}\n")
 
     def plan_meal(self):
         if not self.manager.recipes:
@@ -315,7 +266,7 @@ class RecipeApp:
         if not meals:
             messagebox.showinfo("Meal Plan", "No meals planned.")
             return
-        info = f"📅 {date}:\n" + "\n".join(f" - {r.title}" for r in meals)
+        info = f"\U0001F4C5 {date}:\n" + "\n".join(f" - {r.title}" for r in meals)
         messagebox.showinfo("Meal Plan", info)
 
     def generate_shopping_list(self):
@@ -326,20 +277,20 @@ class RecipeApp:
             return
         items = self.shopper.generate_list(meals)
         self.recipe_text.delete(1.0, tk.END)
-        self.recipe_text.insert(tk.END, f"🛒 Shopping List for {date}\n\n")
+        self.recipe_text.insert(tk.END, f"\U0001F6D2 Shopping List for {date}\n\n")
         for item in items:
             self.recipe_text.insert(tk.END, f" - {item}\n")
-            
+
     def on_close(self):
         self.manager.save_to_file()
         self.root.destroy()
-
 
 if __name__ == "__main__":
     root = tk.Tk()
     app = RecipeApp(root)
     root.protocol("WM_DELETE_WINDOW", app.on_close)
     root.mainloop()
+
 
 
 
