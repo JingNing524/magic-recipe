@@ -304,9 +304,22 @@ class RecipeApp:
         if not meals:
             messagebox.showinfo("Meal Plan", "No meals planned.")
             return
-        info = f"📅 {date}:\n" + "\n".join(f" - {r.title}" for r in meals)
-        messagebox.showinfo("Meal Plan", info)
 
+        self.recipe_text.delete(1.0, tk.END)
+        self.recipe_text.insert(tk.END, f"📅 {date} Meal Plan\n\n")
+
+        for recipe in meals:
+            self.recipe_text.insert(tk.END, f"📋 {recipe.title}\n")
+            self.recipe_text.insert(tk.END, f"{recipe.description}\n")
+            self.recipe_text.insert(tk.END, f"Servings: {recipe.servings} | Cuisine: {recipe.cuisine} | Category: {recipe.category}\n")
+            self.recipe_text.insert(tk.END, "\n🧂 Ingredients:\n")
+            for ing in recipe.ingredients:
+                self.recipe_text.insert(tk.END, f" - {ing.display()}\n")
+            self.recipe_text.insert(tk.END, "\n👩🏼‍🌾🍳 Steps:\n")
+            for idx, step in enumerate(recipe.steps, 1):
+                self.recipe_text.insert(tk.END, f"{idx}. {step}\n")
+            self.recipe_text.insert(tk.END, "\n" + ("=" * 40) + "\n\n")
+            
     def generate_shopping_list(self):
         date = simpledialog.askstring("Shopping List", "Enter date (YYYY-MM-DD):")
         meals = self.planner.get_meals_for_date(date)
