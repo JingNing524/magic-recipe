@@ -166,6 +166,27 @@ class RecipeManager:
             print("Recipes:")
             for i, recipe in enumerate(self.recipes, 1):
                 print(f"{i}. {recipe.title}")
+    
+    def get_all_ingredients_recursive(self, recipe_title, visited=None):
+        if visited is None:
+            visited = set()
+
+        recipe = next((r for r in self.recipes if r.title == recipe_title), None)
+        if not recipe or recipe.title in visited:
+            return []
+
+        visited.add(recipe.title)
+        collected = []
+
+        for ing in recipe.ingredients:
+            sub_recipe = next((r for r in self.recipes if r.title.lower() == ing.name.lower()), None)
+            if sub_recipe:
+                collected += self.get_all_ingredients_recursive(sub_recipe.title, visited)
+            else:
+                collected.append(ing)
+
+        return collected
+
 
 # MealPlanner class
 class MealPlanner:
@@ -326,9 +347,33 @@ class RecipeApp:
         ttk.Button(self.main_frame, text="View Meal Plan", command=self.view_plan).grid(row=3, column=1, sticky="ew")
         ttk.Button(self.main_frame, text="Shopping List", command=self.generate_shopping_list).grid(row=4, column=1, sticky="ew")
         ttk.Button(self.main_frame, text="Exit", command=self.on_close).grid(row=5, column=1, sticky="ew")
+        ttk.Button(self.main_frame, text="Show Full Ingredients", command=self.show_full_ingredients).grid(row=7, column=0, columnspan=2, sticky="ew")
+
+
         
         self.recipe_text = tk.Text(self.main_frame, width=70, height=25)
         self.recipe_text.grid(row=6, column=0, columnspan=2, pady=(10, 0))
+
+    def show_full_ingredients(self):
+        recipe_titles = [recipe.title for recipe in self.manager.recipes]
+        if not recipe_titles:
+            messagebox.showinfo("No Recipes", "There are no recipes available.")
+            return
+
+    
+        title = simpledialog.askstring("Full Ingredients", f"Enter recipe name:\n{', '.join(recipe_titles)}")
+        if not title:
+            return
+
+        ingredients = self.manager.get_all_ingredients_recursive(title)
+        if not ingredients:
+            messagebox.showinfo("No Ingredients", f"No ingredients found for '{title}'.")
+            return
+
+   
+        ingredient_text = "\n".join(ing.display() for ing in ingredients)
+        messagebox.showinfo("All Ingredients", f"Ingredients for {title}:\n\n{ingredient_text}")
+
 
     def refresh_recipe_list(self):
         self.recipe_listbox.delete(0, tk.END)
