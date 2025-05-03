@@ -231,7 +231,7 @@ class MealPlanner:
         except FileNotFoundError:
             pass
 
-# Continue with the rest of your RecipeApp class below...
+
 
 
 from collections import defaultdict
@@ -240,7 +240,6 @@ from collections import defaultdict
 class ShoppingListGenerator:
     def generate_list(self, recipes):
         shopping_list = defaultdict(lambda: defaultdict(float))
-
         for recipe in recipes:
             for ing in recipe.ingredients:
                 shopping_list[ing.name][ing.unit] += ing.quantity
@@ -250,6 +249,8 @@ class ShoppingListGenerator:
             for unit, qty in units.items():
                 formatted_list.append(f"{qty:.2f} {unit} {name}")
         return formatted_list
+
+
 
     def display_list(self, shopping_list):
         print("\n🛒 Shopping List:")
@@ -317,8 +318,7 @@ class RecipeApp:
         ttk.Button(self.main_frame, text="View Meal Plan", command=self.view_plan).grid(row=2, column=1, sticky="ew")
         ttk.Button(self.main_frame, text="Shopping List", command=self.generate_shopping_list).grid(row=3, column=1, sticky="ew")
         ttk.Button(self.main_frame, text="Exit", command=self.on_close).grid(row=4, column=1, sticky="ew")
-        ttk.Button(self.main_frame, text="View Shopping List", command=self.view_shopping_list).grid(row=5, column=1, sticky="ew")
-
+        
         self.recipe_text = tk.Text(self.main_frame, width=70, height=25)
         self.recipe_text.grid(row=6, column=0, columnspan=2, pady=(10, 0))
 
@@ -411,10 +411,14 @@ class RecipeApp:
             return
         items = self.shopper.generate_list(meals)
         self.shopping_list_manager.save_list(date, items)
+
+        unique_items = list(dict.fromkeys(items))  
+
         self.recipe_text.delete(1.0, tk.END)
         self.recipe_text.insert(tk.END, f"🛒 Shopping List for {date}\n\n")
-        for item in items:
+        for item in unique_items:
             self.recipe_text.insert(tk.END, f" - {item}\n")
+
 
 
     def on_close(self):
@@ -429,18 +433,7 @@ class RecipeApp:
             self.root.destroy()
 
     
-    def view_shopping_list(self):
-        date = simpledialog.askstring("View Shopping List", "Enter date (YYYY-MM-DD):")
-        if not date:
-            return
-        items = self.shopping_list_manager.get_list(date)
-        if not items:
-            messagebox.showinfo("List", f"No shopping list found for {date}.")
-            return
-        self.recipe_text.delete(1.0, tk.END)
-        self.recipe_text.insert(tk.END, f"🛒 Saved Shopping List for {date}\n\n")
-        for item in items:
-            self.recipe_text.insert(tk.END, f" - {item}\n")
+    
         
     
 if __name__ == "__main__":
