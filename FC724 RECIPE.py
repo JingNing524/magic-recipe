@@ -9,14 +9,19 @@ from collections import defaultdict
 
 # Ingredient class
 class Ingredient:
-    def __init__(self, name, quantity, unit):
+    def __init__(self, name, quantity, unit, cost_per_unit=0.0):
         self.name = name
         self.quantity = quantity
         self.unit = unit
+        self.cost_per_unit=cost_per_unit
 
     def display(self):
         return f"{self.quantity} {self.unit} {self.name}"
-
+    
+    def total_cost(self):
+        return self.quantity* self.cost_per_unit
+    
+    
 # Recipe class
 class Recipe:
     def __init__(self, title, description, servings, cuisine, category,
@@ -92,8 +97,8 @@ class RecipeManager:
                 "cuisine": r.cuisine,
                 "category": r.category,
                 "ingredients": [
-                    {"name": i.name, "quantity": i.quantity, "unit": i.unit} for i in r.ingredients
-                ],
+                        {"name": i.name, "quantity": i.quantity, "unit": i.unit, "cost_per_unit": i.cost_per_unit} for i in r.ingredients
+                    ],
                 "steps": r.steps
             }
             if r.rating is not None:
@@ -115,7 +120,9 @@ class RecipeManager:
                 rating=r.get("rating"), notes=r.get("notes"), image_path=r.get("image_path")
             )
             for ing in r["ingredients"]:
-                recipe.add_ingredient(Ingredient(ing["name"], ing["quantity"], ing["unit"]))
+                cost = ing.get("cost_per_unit", 0.0)
+                recipe.add_ingredient(Ingredient(ing["name"], ing["quantity"], ing["unit"], cost))
+
             for step in r["steps"]:
                 recipe.add_step(step)
             self.add_recipe(recipe)
@@ -158,14 +165,6 @@ class RecipeManager:
         if rating:
             results = [r for r in results if r.rating and r.rating >= rating]
         return results
-
-    def display_all_recipes(self):
-        if not self.recipes:
-            print("No recipes found.")
-        else:
-            print("Recipes:")
-            for i, recipe in enumerate(self.recipes, 1):
-                print(f"{i}. {recipe.title}")
     
     def get_all_ingredients_recursive(self, recipe_title, visited=None):
         if visited is None:
@@ -186,6 +185,34 @@ class RecipeManager:
                 collected.append(ing)
 
         return collected
+    
+    def select_cheapest_meals(self, target_servings):
+        recipe_costs = []
+        for recipe in self.recipes:
+            total_cost = sum(ing.total_cost() for ing in recipe.ingredients)
+            if recipe.servings > 0:
+                cost_per_serving = total_cost / recipe.servings
+                recipe_costs.append((recipe, cost_per_serving))
+        recipe_costs.sort(key=lambda x: x[1])
+        selected = []
+        total_servings = 0
+        for recipe, _ in recipe_costs:
+            if total_servings >= target_servings:
+                break
+            selected.append(recipe)
+            total_servings += recipe.servings
+        return selected
+
+    
+    def display_all_recipes(self):
+        if not self.recipes:
+            print("No recipes found.")
+        else:
+            print("Recipes:")
+            for i, recipe in enumerate(self.recipes, 1):
+                print(f"{i}. {recipe.title}")
+    
+    
 
 
 # MealPlanner class
@@ -320,7 +347,7 @@ class RecipeApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Recipe Manager")
-        
+
         self.manager = RecipeManager()
         self.planner = MealPlanner()
         self.shopper = ShoppingListGenerator()
@@ -334,45 +361,51 @@ class RecipeApp:
         self.refresh_recipe_list()
 
     def setup_gui(self):
-        self.main_frame = ttk.Frame(self.root, padding=10)
-        self.main_frame.pack(fill="both", expand=True)
+        self.main_frame = ttk.Frame(self.root)
+        self.main_frame.pack()
 
         self.recipe_listbox = tk.Listbox(self.main_frame, height=10)
-        self.recipe_listbox.grid(row=0, column=0, rowspan=6, padx=10)
-        self.recipe_listbox.bind('<<ListboxSelect>>', self.display_recipe)
+        self.recipe_listbox.bind("<<ListboxSelect>>", self.display_recipe)
+        self.recipe_listbox.grid(row=0, column=0, rowspan=8, padx=10)
 
         ttk.Button(self.main_frame, text="Add Recipe", command=self.add_recipe).grid(row=0, column=1, sticky="ew")
         ttk.Button(self.main_frame, text="Edit Recipe", command=self.edit_recipe).grid(row=1, column=1, sticky="ew")
         ttk.Button(self.main_frame, text="Plan Meal", command=self.plan_meal).grid(row=2, column=1, sticky="ew")
         ttk.Button(self.main_frame, text="View Meal Plan", command=self.view_plan).grid(row=3, column=1, sticky="ew")
         ttk.Button(self.main_frame, text="Shopping List", command=self.generate_shopping_list).grid(row=4, column=1, sticky="ew")
-        ttk.Button(self.main_frame, text="Exit", command=self.on_close).grid(row=5, column=1, sticky="ew")
-        ttk.Button(self.main_frame, text="Show Full Ingredients", command=self.show_full_ingredients).grid(row=7, column=0, columnspan=2, sticky="ew")
+        ttk.Button(self.main_frame, text="Show Full Ingredients", command=self.show_full_ingredients).grid(row=5, column=1, sticky="ew")
+        ttk.Button(self.main_frame, text="Optimise Meals", command=self.optimise_meal_plan).grid(row=6, column=1, sticky="ew")
+        ttk.Button(self.main_frame, text="Exit", command=self.on_close).grid(row=7, column=1, sticky="ew")
 
-
-        
         self.recipe_text = tk.Text(self.main_frame, width=70, height=25)
-        self.recipe_text.grid(row=6, column=0, columnspan=2, pady=(10, 0))
+        self.recipe_text.grid(row=8, column=0, columnspan=2, pady=(10, 0))
 
     def show_full_ingredients(self):
-        recipe_titles = [recipe.title for recipe in self.manager.recipes]
-        if not recipe_titles:
-            messagebox.showinfo("No Recipes", "There are no recipes available.")
-            return
-
-    
-        title = simpledialog.askstring("Full Ingredients", f"Enter recipe name:\n{', '.join(recipe_titles)}")
+        recipe_titles = [r.title for r in self.manager.recipes]
+        title = simpledialog.askstring("Recipe Name", f"Enter a recipe name:\n{', '.join(recipe_titles)}")
         if not title:
             return
-
         ingredients = self.manager.get_all_ingredients_recursive(title)
         if not ingredients:
-            messagebox.showinfo("No Ingredients", f"No ingredients found for '{title}'.")
-            return
+            messagebox.showinfo("Result", "No ingredients found.")
+        else:
+            message = "\n".join(ing.display() for ing in ingredients)
+            messagebox.showinfo("Full Ingredients", message)
 
-   
-        ingredient_text = "\n".join(ing.display() for ing in ingredients)
-        messagebox.showinfo("All Ingredients", f"Ingredients for {title}:\n\n{ingredient_text}")
+    def optimise_meal_plan(self):
+        try:
+            target = simpledialog.askstring("Target Servings", "Enter number of people to feed:")
+            if not target:
+                return
+            target = int(target)
+            recipes = self.manager.select_cheapest_meals(target)
+            if recipes:
+                message = "Selected Recipes:\n\n" + "\n".join(r.title for r in recipes)
+                messagebox.showinfo("Optimised Meal Plan", message)
+            else:
+                messagebox.showinfo("No Recipes", "No suitable recipes found.")
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
 
     def refresh_recipe_list(self):
@@ -413,6 +446,8 @@ class RecipeApp:
 
         self.manager.add_recipe(recipe)
         self.refresh_recipe_list()
+        self.manager.save_to_file()
+
 
         
         
@@ -528,7 +563,10 @@ class RecipeApp:
                 name = simpledialog.askstring("Ingredient", "Name:")
                 qty = simpledialog.askfloat("Ingredient", "Quantity:")
                 unit = simpledialog.askstring("Ingredient", "Unit:")
-                recipe.add_ingredient(Ingredient(name, qty, unit))
+                cost = simpledialog.askfloat("Ingredient", "Cost per unit:", minvalue=0.0)
+                recipe.add_ingredient(Ingredient(name, qty, unit, cost))
+
+
 
    
         if messagebox.askyesno("Steps", "Do you want to edit steps? This will reset them."):
@@ -563,6 +601,9 @@ class RecipeApp:
         finally:
             self.root.quit()
             self.root.after(100, self.root.destroy)
+            
+            
+            
  
              
              
@@ -576,3 +617,4 @@ if __name__ == "__main__":
     app = RecipeApp(root)
     root.protocol("WM_DELETE_WINDOW", app.on_close)
     root.mainloop()
+
