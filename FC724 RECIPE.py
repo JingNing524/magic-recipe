@@ -292,16 +292,16 @@ class RecipeApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Recipe Manager")
+        
         self.manager = RecipeManager()
         self.planner = MealPlanner()
         self.shopper = ShoppingListGenerator()
         self.shopping_list_manager = ShoppingListManager()
+        
         self.manager.load_from_file()
         self.planner.load_from_file()
         self.shopping_list_manager.load_from_file()
 
-
-        self.manager.load_from_file()
         self.setup_gui()
         self.refresh_recipe_list()
 
