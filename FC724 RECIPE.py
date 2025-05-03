@@ -344,25 +344,30 @@ class RecipeApp:
         servings = simpledialog.askinteger("Servings", "Servings:")
         cuisine = simpledialog.askstring("Cuisine", "Cuisine type:")
         category = simpledialog.askstring("Category", "Meal category:")
-        notes = simpledialog.askstring("Notes", "Any notes? ")
-        image_path = simpledialog.askstring("Image Path", "Path to image? ")
 
-
-        recipe = Recipe(title, desc, servings, cuisine, category, notes=notes, image_path=image_path)
-
-
+        recipe = Recipe(title, desc, servings, cuisine, category)
+    
         while messagebox.askyesno("Ingredient", "Add ingredient?"):
             name = simpledialog.askstring("Ingredient", "Name:")
             qty = simpledialog.askfloat("Ingredient", "Quantity:")
             unit = simpledialog.askstring("Ingredient", "Unit:")
             recipe.add_ingredient(Ingredient(name, qty, unit))
-
+        
         while messagebox.askyesno("Step", "Add step?"):
             step = simpledialog.askstring("Step", "Description:")
             recipe.add_step(step)
 
+        rating = simpledialog.askfloat("Rating", "Rating out of 5 (optional):")
+        notes = simpledialog.askstring("Notes", "Any notes?")
+        image_path = simpledialog.askstring("Image Path", "Path to image?")
+
+        recipe.rating = rating
+        recipe.notes = notes
+        recipe.image_path = image_path
+
         self.manager.add_recipe(recipe)
         self.refresh_recipe_list()
+
         
         
     def display_recipe(self, event):
