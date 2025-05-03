@@ -234,5 +234,72 @@
     ],
     "notes": "You can blend some of the soup at the end for a smoother texture. Serve with crusty bread",
     "image_path": "noooo"
+  },
+  {
+    "title": "Tuna Salad Sandwich",
+    "description": "A quick and easy sandwich for lunch or a light meal",
+    "servings": 1,
+    "cuisine": "american",
+    "category": "lunch",
+    "ingredients": [
+      {
+        "name": "canned tuna in water, drained",
+        "quantity": 150.0,
+        "unit": "g"
+      },
+      {
+        "name": "mayonnaie",
+        "quantity": 2.0,
+        "unit": "tbsp"
+      },
+      {
+        "name": "celery",
+        "quantity": 1.0,
+        "unit": "stalk"
+      },
+      {
+        "name": "red onion",
+        "quantity": 0.25,
+        "unit": "small"
+      },
+      {
+        "name": "lemon juice",
+        "quantity": 1.0,
+        "unit": "tsp"
+      },
+      {
+        "name": "salt",
+        "quantity": 1.0,
+        "unit": "to taste"
+      },
+      {
+        "name": "black peper",
+        "quantity": 1.0,
+        "unit": "to taste"
+      },
+      {
+        "name": "bread slices",
+        "quantity": 2.0,
+        "unit": ""
+      },
+      {
+        "name": "lettuce leaves",
+        "quantity": 1.0,
+        "unit": ""
+      }
+    ],
+    "steps": [
+      "In a bowl, flake the drained tuna with a fork",
+      "Add mayonnaise, chopped celery, and finely chopped red onion to the tuna",
+      "Squeeze in lemon juice and season with salt and black pepper to taste",
+      "Mix all the ingredients well until combined",
+      "Spread the tuna salad evenly onto one slice of bread",
+      "Top with lettuce leaves if desired",
+      "Place the other slice of bread on top",
+      "Cut the sandwich in half and serve"
+    ],
+    "rating": 3.0,
+    "notes": "You can add other ingredients like sweetcorn, chopped pickles, or hard-boiled eggs to the tuna salad. Use your favourite type of bread",
+    "image_path": "yummmmmm"
   }
 ]

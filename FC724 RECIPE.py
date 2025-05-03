@@ -357,7 +357,7 @@ class RecipeApp:
             step = simpledialog.askstring("Step", "Description:")
             recipe.add_step(step)
 
-        rating = simpledialog.askfloat("Rating", "Rating out of 5 (optional):")
+        rating = simpledialog.askfloat("Rating", "Rating out of 10:")
         notes = simpledialog.askstring("Notes", "Any notes?")
         image_path = simpledialog.askstring("Image Path", "Path to image?")
 
@@ -380,18 +380,22 @@ class RecipeApp:
         self.recipe_text.insert(tk.END, f"📋 {recipe.title}\n")
         self.recipe_text.insert(tk.END, f"{recipe.description}\n\n")
         self.recipe_text.insert(tk.END, f"Servings: {recipe.servings} | Cuisine: {recipe.cuisine} | Category: {recipe.category}\n")
+    
+        if recipe.rating is not None:
+            self.recipe_text.insert(tk.END, f"⭐ Rating: {recipe.rating}/10\n")
+
         self.recipe_text.insert(tk.END, "\n🧂 Ingredients:\n")
-        
         for i in recipe.ingredients:
             self.recipe_text.insert(tk.END, f" - {i.display()}\n")
+    
         self.recipe_text.insert(tk.END, "\n👩🏼‍🌾🍳 Steps:\n")
-        
         for idx, s in enumerate(recipe.steps, 1):
             self.recipe_text.insert(tk.END, f"{idx}. {s}\n")
+
         if recipe.notes:
-            self.recipe_text.insert(tk.END, f"\n📝 Notes:\n{recipe.notes}\n")
+            self.recipe_text.insert(tk.END, f"\n📝 Notes: {recipe.notes}\n")
         if recipe.image_path:
-            self.recipe_text.insert(tk.END, f"\n🖼️ Image Path: {recipe.image_path}\n")
+            self.recipe_text.insert(tk.END, f"🖼 Image Path: {recipe.image_path}\n")
 
 
     def plan_meal(self):
