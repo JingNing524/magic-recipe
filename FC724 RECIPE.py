@@ -457,17 +457,6 @@ class RecipeApp:
             self.recipe_text.insert(tk.END, f" - {item}\n")
 
 
-
-    def on_close(self):
-        try:
-            self.manager.save_to_file()
-            self.planner.save_to_file()
-            self.shopping_list_manager.save_to_file()
-        except Exception as e:
-                messagebox.showerror("Error", f"Failed to save data: {e}")
-        finally:
-            self.root.quit()
-            self.root.destroy()
     def edit_recipe(self):
         selected = self.recipe_listbox.curselection()
         if not selected:
@@ -515,6 +504,23 @@ class RecipeApp:
 
         self.refresh_recipe_list()
         messagebox.showinfo("Updated", "Recipe updated successfully.")
+        
+        
+    def on_close(self):
+        print("Attempting to save and close...")
+        try:
+            self.manager.save_to_file()
+            self.planner.save_to_file()
+            self.shopping_list_manager.save_to_file()
+            print("Files saved successfully.")
+        except Exception as e:
+            print(f"Error saving data: {e}")
+        finally:
+            self.root.quit()
+            self.root.after(100, self.root.destroy)
+ 
+             
+             
 
 
     
@@ -525,4 +531,3 @@ if __name__ == "__main__":
     app = RecipeApp(root)
     root.protocol("WM_DELETE_WINDOW", app.on_close)
     root.mainloop()
-
