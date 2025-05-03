@@ -376,11 +376,18 @@ class RecipeApp:
         self.recipe_text.insert(tk.END, f"{recipe.description}\n\n")
         self.recipe_text.insert(tk.END, f"Servings: {recipe.servings} | Cuisine: {recipe.cuisine} | Category: {recipe.category}\n")
         self.recipe_text.insert(tk.END, "\n🧂 Ingredients:\n")
+        
         for i in recipe.ingredients:
             self.recipe_text.insert(tk.END, f" - {i.display()}\n")
         self.recipe_text.insert(tk.END, "\n👩🏼‍🌾🍳 Steps:\n")
+        
         for idx, s in enumerate(recipe.steps, 1):
             self.recipe_text.insert(tk.END, f"{idx}. {s}\n")
+        if recipe.notes:
+            self.recipe_text.insert(tk.END, f"\n📝 Notes:\n{recipe.notes}\n")
+        if recipe.image_path:
+            self.recipe_text.insert(tk.END, f"\n🖼️ Image Path: {recipe.image_path}\n")
+
 
     def plan_meal(self):
         if not self.manager.recipes:
@@ -413,10 +420,16 @@ class RecipeApp:
             for ing in recipe.ingredients:
                 self.recipe_text.insert(tk.END, f" - {ing.display()}\n")
             self.recipe_text.insert(tk.END, "\n👩🏼‍🌾🍳 Steps:\n")
+            
             for idx, step in enumerate(recipe.steps, 1):
                 self.recipe_text.insert(tk.END, f"{idx}. {step}\n")
             self.recipe_text.insert(tk.END, "\n" + ("=" * 40) + "\n\n")
             
+            if recipe.notes:
+                self.recipe_text.insert(tk.END, f"\n📝 Notes:\n{recipe.notes}\n")
+            if recipe.image_path:
+                self.recipe_text.insert(tk.END, f"\n🖼️ Image Path: {recipe.image_path}\n")
+
     def generate_shopping_list(self):
         date = simpledialog.askstring("Shopping List", "Enter date (YYYY-MM-DD):")
         meals = self.planner.get_meals_for_date(date)
