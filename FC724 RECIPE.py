@@ -103,6 +103,7 @@ class RecipeManager:
         ]
 
     def from_dict(self, data):
+        self.recipes.clear()
         for r in data:
             recipe = Recipe(
                 r["title"], r["description"], r["servings"],
@@ -128,7 +129,8 @@ class RecipeManager:
             pass
 
     def add_recipe(self, recipe):
-        self.recipes.append(recipe)
+        if not any(r.title.lower() == recipe.title.lower() for r in self.recipes):
+            self.recipes.append(recipe)
 
     def remove_recipe(self, recipe_title):
         self.recipes = [r for r in self.recipes if r.title.lower() != recipe_title.lower()]
@@ -206,6 +208,7 @@ class MealPlanner:
         }
 
     def from_dict(self, data):
+        self.planned_meals.clear()
         for date, recipe_list in data.items():
             for r in recipe_list:
                 recipe = Recipe(
@@ -324,9 +327,11 @@ class RecipeApp:
 
     def refresh_recipe_list(self):
         self.recipe_listbox.delete(0, tk.END)
+        seen=set()
         for r in self.manager.recipes:
-            self.recipe_listbox.insert(tk.END, r.title)
-
+            if r.title.lower() not in seen:
+                self.recipe_listbox.insert(tk.END, r.title)
+                seen.add(r.title.lower())
     def add_recipe(self):
         title = simpledialog.askstring("Title", "Recipe title:")
         if not title:
