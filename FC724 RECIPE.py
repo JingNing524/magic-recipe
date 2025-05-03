@@ -321,10 +321,11 @@ class RecipeApp:
         self.recipe_listbox.bind('<<ListboxSelect>>', self.display_recipe)
 
         ttk.Button(self.main_frame, text="Add Recipe", command=self.add_recipe).grid(row=0, column=1, sticky="ew")
-        ttk.Button(self.main_frame, text="Plan Meal", command=self.plan_meal).grid(row=1, column=1, sticky="ew")
-        ttk.Button(self.main_frame, text="View Meal Plan", command=self.view_plan).grid(row=2, column=1, sticky="ew")
-        ttk.Button(self.main_frame, text="Shopping List", command=self.generate_shopping_list).grid(row=3, column=1, sticky="ew")
-        ttk.Button(self.main_frame, text="Exit", command=self.on_close).grid(row=4, column=1, sticky="ew")
+        ttk.Button(self.main_frame, text="Edit Recipe", command=self.edit_recipe).grid(row=1, column=1, sticky="ew")
+        ttk.Button(self.main_frame, text="Plan Meal", command=self.plan_meal).grid(row=2, column=1, sticky="ew")
+        ttk.Button(self.main_frame, text="View Meal Plan", command=self.view_plan).grid(row=3, column=1, sticky="ew")
+        ttk.Button(self.main_frame, text="Shopping List", command=self.generate_shopping_list).grid(row=4, column=1, sticky="ew")
+        ttk.Button(self.main_frame, text="Exit", command=self.on_close).grid(row=5, column=1, sticky="ew")
         
         self.recipe_text = tk.Text(self.main_frame, width=70, height=25)
         self.recipe_text.grid(row=6, column=0, columnspan=2, pady=(10, 0))
@@ -377,8 +378,8 @@ class RecipeApp:
         index = selected[0]
         recipe = self.manager.recipes[index]
         self.recipe_text.delete(1.0, tk.END)
-        self.recipe_text.insert(tk.END, f"📋 {recipe.title}\n")
-        self.recipe_text.insert(tk.END, f"{recipe.description}\n\n")
+        self.recipe_text.insert(tk.END, f"🍽️ {recipe.title}\n")
+        self.recipe_text.insert(tk.END, f"(👩🏻‍💻{recipe.description})\n\n")
         self.recipe_text.insert(tk.END, f"Servings: {recipe.servings} | Cuisine: {recipe.cuisine} | Category: {recipe.category}\n")
     
         if recipe.rating is not None:
@@ -393,7 +394,7 @@ class RecipeApp:
             self.recipe_text.insert(tk.END, f"{idx}. {s}\n")
 
         if recipe.notes:
-            self.recipe_text.insert(tk.END, f"\n📝 Notes: {recipe.notes}\n")
+            self.recipe_text.insert(tk.END, f"\n📝 Notes: {recipe.notes}\n\n")
         if recipe.image_path:
             self.recipe_text.insert(tk.END, f"🖼 Image Path: {recipe.image_path}\n")
 
@@ -467,6 +468,54 @@ class RecipeApp:
         finally:
             self.root.quit()
             self.root.destroy()
+    def edit_recipe(self):
+        selected = self.recipe_listbox.curselection()
+        if not selected:
+            messagebox.showinfo("Edit", "Select a recipe to edit.")
+            return
+
+        index = selected[0]
+        recipe = self.manager.recipes[index]
+
+    
+        title = simpledialog.askstring("Title", "Recipe title:", initialvalue=recipe.title)
+        desc = simpledialog.askstring("Description", "Description:", initialvalue=recipe.description)
+        servings = simpledialog.askinteger("Servings", "Servings:", initialvalue=recipe.servings)
+        cuisine = simpledialog.askstring("Cuisine", "Cuisine type:", initialvalue=recipe.cuisine)
+        category = simpledialog.askstring("Category", "Meal category:", initialvalue=recipe.category)
+        rating = simpledialog.askfloat("Rating", "Rating (1-5):", initialvalue=recipe.rating)
+        notes = simpledialog.askstring("Notes", "Any notes?", initialvalue=recipe.notes)
+        image_path = simpledialog.askstring("Image Path", "Path to image?", initialvalue=recipe.image_path)
+
+   
+        if messagebox.askyesno("Ingredients", "Do you want to edit ingredients? This will reset them."):
+            recipe.ingredients = []
+            while messagebox.askyesno("Ingredient", "Add ingredient?"):
+                name = simpledialog.askstring("Ingredient", "Name:")
+                qty = simpledialog.askfloat("Ingredient", "Quantity:")
+                unit = simpledialog.askstring("Ingredient", "Unit:")
+                recipe.add_ingredient(Ingredient(name, qty, unit))
+
+   
+        if messagebox.askyesno("Steps", "Do you want to edit steps? This will reset them."):
+            recipe.steps = []
+            while messagebox.askyesno("Step", "Add step?"):
+                step = simpledialog.askstring("Step", "Description:")
+                recipe.add_step(step)
+
+    
+        recipe.title = title
+        recipe.description = desc
+        recipe.servings = servings
+        recipe.cuisine = cuisine
+        recipe.category = category
+        recipe.rating = rating
+        recipe.notes = notes
+        recipe.image_path = image_path
+
+        self.refresh_recipe_list()
+        messagebox.showinfo("Updated", "Recipe updated successfully.")
+
 
     
     
