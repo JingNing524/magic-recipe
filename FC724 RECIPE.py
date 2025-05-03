@@ -83,24 +83,28 @@ class RecipeManager:
         self.recipes = []
 
     def to_dict(self):
-        return [
-            {
+        recipe_dicts = []
+        for r in self.recipes:
+            recipe_data = {
                 "title": r.title,
                 "description": r.description,
                 "servings": r.servings,
                 "cuisine": r.cuisine,
                 "category": r.category,
                 "ingredients": [
-                    {"name": i.name, "quantity": i.quantity, "unit": i.unit}
-                    for i in r.ingredients
+                    {"name": i.name, "quantity": i.quantity, "unit": i.unit} for i in r.ingredients
                 ],
-                "steps": r.steps,
-                "rating": r.rating,
-                "notes": r.notes,
-                "image_path": r.image_path
+                "steps": r.steps
             }
-            for r in self.recipes
-        ]
+            if r.rating is not None:
+                recipe_data["rating"] = r.rating
+            if r.notes:
+                recipe_data["notes"] = r.notes
+            if r.image_path:
+                recipe_data["image_path"] = r.image_path
+            recipe_dicts.append(recipe_data)
+        return recipe_dicts
+
 
     def from_dict(self, data):
         self.recipes.clear()
@@ -340,8 +344,12 @@ class RecipeApp:
         servings = simpledialog.askinteger("Servings", "Servings:")
         cuisine = simpledialog.askstring("Cuisine", "Cuisine type:")
         category = simpledialog.askstring("Category", "Meal category:")
+        notes = simpledialog.askstring("Notes", "Any notes? ")
+        image_path = simpledialog.askstring("Image Path", "Path to image? ")
 
-        recipe = Recipe(title, desc, servings, cuisine, category)
+
+        recipe = Recipe(title, desc, servings, cuisine, category, notes=notes, image_path=image_path)
+
 
         while messagebox.askyesno("Ingredient", "Add ingredient?"):
             name = simpledialog.askstring("Ingredient", "Name:")
@@ -355,7 +363,8 @@ class RecipeApp:
 
         self.manager.add_recipe(recipe)
         self.refresh_recipe_list()
-
+        
+        
     def display_recipe(self, event):
         selected = self.recipe_listbox.curselection()
         if not selected:

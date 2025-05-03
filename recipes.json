@@ -27,10 +27,7 @@
       "Brown the ground beef.",
       "Mix in tomato sauce and simmer.",
       "Combine with spaghetti and serve."
-    ],
-    "rating": null,
-    "notes": null,
-    "image_path": null
+    ]
   },
   {
     "title": "microwave scrambled eggs",
@@ -66,9 +63,107 @@
       "Microwave: Microwave on high for 30 seconds.",
       "Stir: Take the mug out and stir the eggs with a fork.",
       "Microwave again: Microwave for another 30-60 seconds, or until the eggs look mostly set but are still a little moist. Cooking time can vary depending on your microwave."
+    ]
+  },
+  {
+    "title": "Quick Chicken Stir-Fry",
+    "description": "A simple and flavourful Asian-inspired stir-fry",
+    "servings": 2,
+    "cuisine": "Asian",
+    "category": "Dinner",
+    "ingredients": [
+      {
+        "name": "Chicken breast",
+        "quantity": 300.0,
+        "unit": "g"
+      },
+      {
+        "name": "Mixed vegetables",
+        "quantity": 200.0,
+        "unit": "g"
+      },
+      {
+        "name": "soy sauce",
+        "quantity": 2.0,
+        "unit": "tbsp"
+      },
+      {
+        "name": "sesame oil",
+        "quantity": 1.0,
+        "unit": "tbsp"
+      },
+      {
+        "name": "rice",
+        "quantity": 150.0,
+        "unit": "g"
+      },
+      {
+        "name": "",
+        "quantity": null,
+        "unit": null
+      }
     ],
-    "rating": null,
-    "notes": null,
-    "image_path": null
+    "steps": [
+      "Cook rice according to package instructions.",
+      "Cut chicken breast into bite-sized pieces",
+      "Heat sesame oil in a pan or wok",
+      "Stir-fry chicken until cooked through",
+      "Add mixed vegetables and stir-fry until tender-crisp",
+      "Pour in soy sauce and toss to coat.",
+      "Serve hot with cooked rice",
+      null
+    ]
+  },
+  {
+    "title": "cheesy tomato pasta bake",
+    "description": "A comforting and easy pasta bake with tomatoes and cheese",
+    "servings": 4,
+    "cuisine": "Italian-American",
+    "category": "dinner",
+    "ingredients": [
+      {
+        "name": "pasta",
+        "quantity": 300.0,
+        "unit": "g"
+      },
+      {
+        "name": "canned chopped tomatoes",
+        "quantity": 400.0,
+        "unit": "g"
+      },
+      {
+        "name": "garlic",
+        "quantity": 2.0,
+        "unit": "cloves"
+      },
+      {
+        "name": "dried oregano",
+        "quantity": 1.0,
+        "unit": "tsp"
+      },
+      {
+        "name": "mozzarella cheese",
+        "quantity": 150.0,
+        "unit": "g"
+      },
+      {
+        "name": "parmesan cheese",
+        "quantity": 50.0,
+        "unit": "g"
+      }
+    ],
+    "steps": [
+      "Cook pasta according to package instructions until slightly underdone",
+      "Preheat oven to 180\u00b0C (160\u00b0C fan/Gas Mark 4)",
+      "Saut\u00e9 minced garlic in a pan with a little olive oil until fragrant",
+      "Add chopped tomatoes and oregano. Simmer for 5-10 minutes",
+      "Drain the pasta and add it to the tomato sauce. Stir well",
+      "Pour the pasta mixture into an ovenproof dish",
+      "Top with slices of mozzarella and grated Parmesan cheese",
+      "Bake in the preheated oven for 20-25 minutes, or until the cheese is melted and bubbly.",
+      "Let it rest for a few minutes before serving",
+      "A comforting and easy pasta bake with tomatoes and cheese."
+    ],
+    "notes": "Add cooked vegetables or meat to the sauce for extra flavour and nutrients. You can also use different types of cheese"
   }
 ]
