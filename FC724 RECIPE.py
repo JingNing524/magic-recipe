@@ -502,14 +502,32 @@ class RecipeApp:
         if not self.manager.recipes:
             messagebox.showinfo("Info", "No recipes to plan.")
             return
-        date = simpledialog.askstring("Plan Meal", "Enter date (YYYY-MM-DD):")
-        title = simpledialog.askstring("Plan Meal", "Enter recipe title:")
-        recipe = next((r for r in self.manager.recipes if r.title.lower() == title.lower()), None)
-        if recipe:
-            self.planner.add_meal(date, recipe)
-            messagebox.showinfo("Planned", f"Added {title} to {date}")
-        else:
-            messagebox.showerror("Not found", "Recipe not found.")
+
+        plan_window = tk.Toplevel(self.root)
+        plan_window.title("Plan Meal")
+
+        ttk.Label(plan_window, text="Enter date (YYYY-MM-DD):").pack(pady=5)
+        date_entry = ttk.Entry(plan_window)
+        date_entry.pack(pady=5)
+
+        ttk.Label(plan_window, text="Select a recipe:").pack(pady=5)
+        recipe_combo = ttk.Combobox(plan_window, values=[r.title for r in self.manager.recipes], state="readonly")
+        recipe_combo.pack(pady=5)
+
+        def confirm_plan():
+            date = date_entry.get()
+            title = recipe_combo.get()
+            if not date or not title:
+                messagebox.showinfo("Missing Info", "Please enter a date and select a recipe.")
+                return
+            recipe = next((r for r in self.manager.recipes if r.title == title), None)
+            if recipe:
+                self.planner.add_meal(date, recipe)
+                messagebox.showinfo("Planned", f"Added {title} to {date}")
+                plan_window.destroy()
+
+        ttk.Button(plan_window, text="Plan", command=confirm_plan).pack(pady=10)
+
 
     def view_plan(self):
         date = simpledialog.askstring("View Meal Plan", "Enter date (YYYY-MM-DD):")
