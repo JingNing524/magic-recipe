@@ -19,5 +19,93 @@
     "rating": 7.0,
     "notes": "grhmrokg",
     "image_path": "fbklgrm"
+  },
+  {
+    "title": "Peanut Butter and Banana Sandwich",
+    "description": "A classic, quick, and satisfying sandwich",
+    "servings": 1,
+    "cuisine": "American",
+    "category": "Lunch/Snack",
+    "ingredients": [
+      {
+        "name": "Bread slices",
+        "quantity": 2.0,
+        "unit": "",
+        "cost_per_unit": 0.0
+      },
+      {
+        "name": "Peanut butter",
+        "quantity": 2.0,
+        "unit": "tbsp",
+        "cost_per_unit": 0.0
+      },
+      {
+        "name": "Banana",
+        "quantity": 0.5,
+        "unit": "",
+        "cost_per_unit": 0.0
+      }
+    ],
+    "steps": [
+      "Spread peanut butter evenly on one slice of bread.",
+      "Slice the banana thinly.",
+      "Arrange the banana slices on top of the peanut butter.",
+      "Place the other slice of bread on top.",
+      "Cut the sandwich in half and serve.",
+      null
+    ],
+    "rating": 7.0,
+    "notes": "You can use smooth or crunchy peanut butter. For extra flavour, try toasting the bread lightly",
+    "image_path": "no"
+  },
+  {
+    "title": "Scrambled Eggs",
+    "description": "A simple and versatile breakfast or light meal.",
+    "servings": 1,
+    "cuisine": "International",
+    "category": "Breakfast/Lunch",
+    "ingredients": [
+      {
+        "name": "Eggs",
+        "quantity": 2.0,
+        "unit": "",
+        "cost_per_unit": 0.0
+      },
+      {
+        "name": "Milk or cream",
+        "quantity": 1.0,
+        "unit": "tbsp",
+        "cost_per_unit": 0.0
+      },
+      {
+        "name": "Butter or oil",
+        "quantity": 1.0,
+        "unit": "tsp",
+        "cost_per_unit": 0.0
+      },
+      {
+        "name": "Salt",
+        "quantity": 1.0,
+        "unit": "",
+        "cost_per_unit": 0.0
+      },
+      {
+        "name": "Black pepper",
+        "quantity": 1.0,
+        "unit": "",
+        "cost_per_unit": 0.0
+      }
+    ],
+    "steps": [
+      "Crack the eggs into a bowl",
+      "Whisk the eggs with milk or cream (if using), salt, and pepper until the yolks and whites are combined.",
+      "Heat butter or oil in a non-stick pan over medium-low heat.",
+      "Pour the egg mixture into the pan",
+      "Cook, stirring gently with a spatula, until the eggs are set but still slightly moist.",
+      "Remove from heat and serve immediately."
+    ],
+    "rating": 10.0,
+    "notes": "Don't overcook the eggs if you prefer them soft and creamy. You can add cheese, herbs, or vegetables for extra flavour.",
+    "image_path": "egg"
   }
 ]

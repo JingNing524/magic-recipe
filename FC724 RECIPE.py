@@ -381,16 +381,35 @@ class RecipeApp:
         self.recipe_text.grid(row=8, column=0, columnspan=2, pady=(10, 0))
 
     def show_full_ingredients(self):
-        recipe_titles = [r.title for r in self.manager.recipes]
-        title = simpledialog.askstring("Recipe Name", f"Enter a recipe name:\n{', '.join(recipe_titles)}")
-        if not title:
+        if not self.manager.recipes:
+            messagebox.showinfo("Info", "No recipes available.")
             return
-        ingredients = self.manager.get_all_ingredients_recursive(title)
-        if not ingredients:
-            messagebox.showinfo("Result", "No ingredients found.")
-        else:
-            message = "\n".join(ing.display() for ing in ingredients)
-            messagebox.showinfo("Full Ingredients", message)
+
+    
+        selection_window = tk.Toplevel(self.root)
+        selection_window.title("Select Recipe")
+
+        label = ttk.Label(selection_window, text="Enter a recipe name:")
+        label.pack(pady=5)
+
+        recipe_combo = ttk.Combobox(selection_window, values=[r.title for r in self.manager.recipes], state="readonly")
+        recipe_combo.pack(pady=5)
+
+        def show_ingredients():
+            title = recipe_combo.get()
+            if not title:
+                messagebox.showinfo("Selection", "Please select a recipe.")
+                return
+            ingredients = self.manager.get_all_ingredients_recursive(title)
+            if not ingredients:
+                messagebox.showinfo("Result", "No ingredients found.")
+            else:
+                message = "\n".join(ing.display() for ing in ingredients)
+                messagebox.showinfo("Full Ingredients", message)
+                selection_window.destroy()
+
+        ttk.Button(selection_window, text="Show Ingredients", command=show_ingredients).pack(pady=5)
+
 
     def optimise_meal_plan(self):
         try:
