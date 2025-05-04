@@ -19,7 +19,9 @@ class Ingredient:
         return f"{self.quantity} {self.unit} {self.name}"
     
     def total_cost(self):
-        return self.quantity* self.cost_per_unit
+        quantity = self.quantity if self.quantity is not None else 0
+        cost = self.cost_per_unit if self.cost_per_unit is not None else 0
+        return quantity * cost
     
     
 # Recipe class
@@ -207,6 +209,7 @@ class RecipeManager:
         recipe_costs = []
         for recipe in self.recipes:
             total_cost = sum(ing.total_cost() for ing in recipe.ingredients)
+
             if recipe.servings > 0:
                 cost_per_serving = total_cost / recipe.servings
                 recipe_costs.append((recipe, cost_per_serving))
@@ -438,39 +441,27 @@ class RecipeApp:
                 messagebox.showinfo("No Recipes", "No suitable recipes found.")
                 return
 
-        
-            date = simpledialog.askstring("Meal Plan Date", "Enter date to save the plan (YYYY-MM-DD):")
-            if not date:
-                return
-
-        
-            for r in recipes:
-                self.planner.add_meal(date, r)
-
-        
-            message = f"Saved Optimised Plan for {date}:\n\n"
+            message = f"Optimised Meal Suggestions for {target} servings:\n\n"
             total_combined_cost = 0.0
             total_combined_servings = 0
 
             for r in recipes:
-                total_cost = sum(i.total_cost() for i in r.ingredients)
-                cost_per_serving = total_cost / r.servings if r.servings else 0
+                total_cost = r.total_recipe_cost
+                cost_per_serving = r.cost_per_serving()
                 total_combined_cost += total_cost
                 total_combined_servings += r.servings
                 message += (
                     f"{r.title} — Servings: {r.servings}\n"
-                    f"  • Total Cost: ${total_cost:.2f}\n"
-                    f"  • Cost per Serving: ${cost_per_serving:.2f}\n\n"
+                    f"  • Total Cost: £{total_cost:.2f}\n"
+                    f"  • Cost per Serving: £{cost_per_serving:.2f}\n\n"
                 )
 
-            message += f"📊 Combined Cost: ${total_combined_cost:.2f} for {total_combined_servings} servings"
-            messagebox.showinfo("Optimised Meal Plan", message)
-
-        
-            self.planner.save_to_file()
+            message += f"📊 Combined Cost: £{total_combined_cost:.2f} for {total_combined_servings} servings"
+            messagebox.showinfo("Optimised Meals", message)
 
         except Exception as e:
             messagebox.showerror("Error", str(e))
+
 
 
 
@@ -654,11 +645,9 @@ class RecipeApp:
                 name = simpledialog.askstring("Ingredient", "Name:")
                 qty_str = simpledialog.askstring("Ingredient", "Quantity:")
                 qty = float(qty_str) if qty_str else 0.0
-
-
                 unit = simpledialog.askstring("Ingredient", "Unit:")
-                cost = simpledialog.askfloat("Ingredient", "Cost per unit:", minvalue=0.0)
-                recipe.add_ingredient(Ingredient(name, qty, unit, cost))
+                recipe.add_ingredient(Ingredient(name, qty, unit)) 
+
 
 
 

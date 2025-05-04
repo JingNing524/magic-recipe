@@ -3,22 +3,43 @@
     "title": "Spaghetti Bolognese",
     "description": "A classic Italian pasta dish",
     "servings": 4,
-    "cuisine": "",
-    "category": "",
+    "cuisine": "Italian",
+    "category": "Dinner",
     "ingredients": [
       {
         "name": "Spaghetti",
         "quantity": 400.0,
         "unit": "g",
         "cost_per_unit": 0.0
+      },
+      {
+        "name": "Ground beef",
+        "quantity": 250.0,
+        "unit": "g",
+        "cost_per_unit": 0.0
+      },
+      {
+        "name": "Tomato sauce",
+        "quantity": 1.0,
+        "unit": "cup",
+        "cost_per_unit": 0.0
+      },
+      {
+        "name": null,
+        "quantity": 0.0,
+        "unit": null,
+        "cost_per_unit": 0.0
       }
     ],
     "steps": [
-      "Cook spaghetti until al dente"
+      "Cook spaghetti until al dente",
+      "Brown the ground beef",
+      "Mix in tomato sauce and simmer",
+      "Combine with spaghetti and serve"
     ],
-    "total_cost": 0.0,
+    "total_cost": 10.0,
     "rating": 7.0,
-    "notes": "grhmrokg",
+    "notes": "hehe",
     "image_path": "fbklgrm"
   },
   {
@@ -29,22 +50,10 @@
     "category": "Lunch/Snack",
     "ingredients": [
       {
-        "name": "Bread slices",
-        "quantity": 2.0,
-        "unit": "",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Peanut butter",
-        "quantity": 2.0,
-        "unit": "tbsp",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Banana",
-        "quantity": 0.5,
-        "unit": "",
-        "cost_per_unit": 0.0
+        "name": null,
+        "quantity": 0.0,
+        "unit": null,
+        "cost_per_unit": null
       }
     ],
     "steps": [
@@ -55,7 +64,7 @@
       "Cut the sandwich in half and serve.",
       null
     ],
-    "total_cost": 0.0,
+    "total_cost": 5.0,
     "rating": 7.0,
     "notes": "You can use smooth or crunchy peanut butter. For extra flavour, try toasting the bread lightly",
     "image_path": "no"
@@ -106,7 +115,7 @@
       "Cook, stirring gently with a spatula, until the eggs are set but still slightly moist",
       "Remove from heat and serve immediately"
     ],
-    "total_cost": 0.0,
+    "total_cost": 0.5,
     "rating": 10.0,
     "notes": "no",
     "image_path": "pp"
@@ -184,7 +193,7 @@
       "Cut the sandwich in half and serve.",
       null
     ],
-    "total_cost": 0.0,
+    "total_cost": 3.0,
     "rating": 6.0,
     "notes": "You can add other ingredients like sweetcorn, chopped pickles, or hard-boiled eggs to the tuna salad. Use your favourite type of bread",
     "image_path": "vvvv"
@@ -236,7 +245,7 @@
       "Pour in soy sauce and toss to coat.",
       "Serve hot with cooked rice"
     ],
-    "total_cost": 0.0,
+    "total_cost": 10.0,
     "rating": 5.0,
     "notes": "Add garlic, ginger, or other seasonings to taste. You can also use different vegetables or protein.",
     "image_path": "v"
