@@ -1,253 +1,35 @@
 [
-  {
-    "title": "Spaghetti Bolognese",
-    "description": "A classic Italian pasta dish",
-    "servings": 4,
-    "cuisine": "Italian",
-    "category": "Dinner",
-    "ingredients": [
-      {
-        "name": "Spaghetti",
-        "quantity": 400.0,
-        "unit": "g",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Ground beef",
-        "quantity": 250.0,
-        "unit": "g",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Tomato sauce",
-        "quantity": 1.0,
-        "unit": "cup",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": null,
-        "quantity": 0.0,
-        "unit": null,
-        "cost_per_unit": 0.0
-      }
-    ],
-    "steps": [
-      "Cook spaghetti until al dente",
-      "Brown the ground beef",
-      "Mix in tomato sauce and simmer",
-      "Combine with spaghetti and serve"
-    ],
-    "total_cost": 10.0,
-    "rating": 7.0,
-    "notes": "hehe",
-    "image_path": "fbklgrm"
-  },
-  {
-    "title": "Peanut Butter and Banana Sandwich",
-    "description": "A classic, quick, and satisfying sandwich",
-    "servings": 1,
-    "cuisine": "American",
-    "category": "Lunch/Snack",
-    "ingredients": [
-      {
-        "name": null,
-        "quantity": 0.0,
-        "unit": null,
-        "cost_per_unit": null
-      }
-    ],
-    "steps": [
-      "Spread peanut butter evenly on one slice of bread.",
-      "Slice the banana thinly.",
-      "Arrange the banana slices on top of the peanut butter.",
-      "Place the other slice of bread on top.",
-      "Cut the sandwich in half and serve.",
-      null
-    ],
-    "total_cost": 5.0,
-    "rating": 7.0,
-    "notes": "You can use smooth or crunchy peanut butter. For extra flavour, try toasting the bread lightly",
-    "image_path": "no"
-  },
-  {
-    "title": "Scrambled Eggs",
-    "description": "A simple and versatile breakfast or light meal",
-    "servings": 1,
-    "cuisine": "International",
-    "category": "Breakfast/Lunch",
-    "ingredients": [
-      {
-        "name": "Eggs",
-        "quantity": 2.0,
-        "unit": "",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Milk or cream ",
-        "quantity": 1.0,
-        "unit": "Butter or oil",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Butter or oil",
-        "quantity": 1.0,
-        "unit": "",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Salt",
-        "quantity": 1.0,
-        "unit": "",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Black pepper",
-        "quantity": 1.0,
-        "unit": "",
-        "cost_per_unit": 0.0
-      }
-    ],
-    "steps": [
-      "Crack the eggs into a bowl.",
-      "Whisk the eggs with milk or cream (if using), salt, and pepper until the yolks and whites are combined.",
-      "Heat butter or oil in a non-stick pan over medium-low heat",
-      "Pour the egg mixture into the pan",
-      "Cook, stirring gently with a spatula, until the eggs are set but still slightly moist",
-      "Remove from heat and serve immediately"
-    ],
-    "total_cost": 0.5,
-    "rating": 10.0,
-    "notes": "no",
-    "image_path": "pp"
-  },
-  {
-    "title": "Tuna Salad Sandwich",
-    "description": "A quick and easy sandwich for lunch or a light meal",
-    "servings": 1,
-    "cuisine": "American",
-    "category": "Lunch",
-    "ingredients": [
-      {
-        "name": "Canned tuna in water, drained",
-        "quantity": 150.0,
-        "unit": "g",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Mayonnaise",
-        "quantity": 2.0,
-        "unit": "tbsp",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Celery",
-        "quantity": 1.0,
-        "unit": "stalk",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Red onion",
-        "quantity": 0.25,
-        "unit": "",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Lemaon juice",
-        "quantity": 1.0,
-        "unit": "",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Salt",
-        "quantity": 0.0,
-        "unit": "",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Black pepper",
-        "quantity": 0.0,
-        "unit": "",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "read slices",
-        "quantity": 2.0,
-        "unit": "",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Lettuce leaves",
-        "quantity": 1.0,
-        "unit": "",
-        "cost_per_unit": 0.0
-      }
-    ],
-    "steps": [
-      "In a bowl, flake the drained tuna with a fork.",
-      "Add mayonnaise, chopped celery, and finely chopped red onion to the tuna.",
-      "Squeeze in lemon juice and season with salt and black pepper to taste.",
-      "Mix all the ingredients well until combined",
-      "Spread the tuna salad evenly onto one slice of bread",
-      "Top with lettuce leaves if desired.",
-      "Place the other slice of bread on top",
-      "Cut the sandwich in half and serve.",
-      null
-    ],
-    "total_cost": 3.0,
-    "rating": 6.0,
-    "notes": "You can add other ingredients like sweetcorn, chopped pickles, or hard-boiled eggs to the tuna salad. Use your favourite type of bread",
-    "image_path": "vvvv"
-  },
-  {
-    "title": "Quick Chicken Stir-Fry",
-    "description": "A simple and flavourful Asian-inspired stir-fry.",
-    "servings": 2,
-    "cuisine": "Asian",
-    "category": "Dinner",
-    "ingredients": [
-      {
-        "name": "Chicken breast",
-        "quantity": 300.0,
-        "unit": "g",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Mixed vegetables",
-        "quantity": 200.0,
-        "unit": "g",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Soy sauce",
-        "quantity": 2.0,
-        "unit": "tbsp",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Sesame oil",
-        "quantity": 1.0,
-        "unit": "tbsp",
-        "cost_per_unit": 0.0
-      },
-      {
-        "name": "Rice",
-        "quantity": 150.0,
-        "unit": "g",
-        "cost_per_unit": 0.0
-      }
-    ],
-    "steps": [
-      "Cook rice according to package instructions",
-      "Cut chicken breast into bite-sized pieces.",
-      "Heat sesame oil in a pan or wok.",
-      "Stir-fry chicken until cooked through",
-      "Add mixed vegetables and stir-fry until tender-crisp",
-      "Pour in soy sauce and toss to coat.",
-      "Serve hot with cooked rice"
-    ],
-    "total_cost": 10.0,
-    "rating": 5.0,
-    "notes": "Add garlic, ginger, or other seasonings to taste. You can also use different vegetables or protein.",
-    "image_path": "v"
-  }
+    {
+        "title": "Spaghetti Bolognese",
+        "description": "A classic Italian pasta dish",
+        "servings": 4,
+        "cuisine": "Italian",
+        "category": "Dinner",
+        "ingredients": [],
+        "steps": [],
+        "total_cost": 5.0,
+        "rating": 7.0,
+        "notes": "r",
+        "image_path": "r"
+    },
+    {
+        "title": "Quick Chicken Stir-Fry",
+        "description": "A simple and flavourful Asian-inspired stir-fry.",
+        "servings": 2,
+        "cuisine": "Asian",
+        "category": "Dinner",
+        "ingredients": [
+            {
+                "name": "Chicken breast",
+                "quantity": 300.0,
+                "unit": "g",
+                "cost_per_unit": 0.0
+            }
+        ],
+        "steps": [],
+        "total_cost": 10.0,
+        "rating": 6.0,
+        "notes": "Add garlic, ginger, or other seasonings to taste. You can also use different vegetables or protein.",
+        "image_path": "bn"
+    }
 ]
