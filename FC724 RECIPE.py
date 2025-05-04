@@ -7,7 +7,7 @@ import tkinter as tk
 from tkinter import simpledialog, messagebox, ttk
 from collections import defaultdict
 
-# Ingredient class
+# 
 class Ingredient:
     def __init__(self, name, quantity, unit, cost_per_unit=0.0):
         self.name = name
@@ -38,7 +38,7 @@ class Recipe:
         self.rating = rating
         self.notes = notes
         self.image_path = image_path
-        self.total_recipe_cost = total_cost  # NEW field
+        self.total_recipe_cost = total_cost  
 
     def add_ingredient(self, ingredient):
         self.ingredients.append(ingredient)
