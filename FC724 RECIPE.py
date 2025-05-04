@@ -6,6 +6,8 @@ import json
 import tkinter as tk
 from tkinter import simpledialog, messagebox, ttk
 from collections import defaultdict
+from itertools import combinations
+
 
 # 
 class Ingredient:
@@ -205,23 +207,27 @@ class RecipeManager:
 
         return collected
     
-    def select_cheapest_meals(self, target_servings):
-        recipe_costs = []
-        for recipe in self.recipes:
-            total_cost = sum(ing.total_cost() for ing in recipe.ingredients)
+    from itertools import combinations
 
-            if recipe.servings > 0:
-                cost_per_serving = total_cost / recipe.servings
-                recipe_costs.append((recipe, cost_per_serving))
-        recipe_costs.sort(key=lambda x: x[1])
-        selected = []
-        total_servings = 0
-        for recipe, _ in recipe_costs:
-            if total_servings >= target_servings:
-                break
-            selected.append(recipe)
-            total_servings += recipe.servings
-        return selected
+    def select_cheapest_meals(self, target_servings):
+        valid_combinations = []
+
+        # try all combinations of 1 to len(recipes) recipes
+        for r in range(1, len(self.recipes) + 1):
+            for combo in combinations(self.recipes, r):
+                total_servings = sum(recipe.servings for recipe in combo)
+                if total_servings == target_servings:
+                    total_cost = sum(recipe.total_recipe_cost for recipe in combo)
+                    valid_combinations.append((combo, total_cost))
+
+        # return the cheapest valid combo, if any
+        if valid_combinations:
+            best_combo = min(valid_combinations, key=lambda x: x[1])
+            return best_combo[0]  # just return the recipes
+        return []
+
+
+
 
     
     def display_all_recipes(self):
@@ -441,17 +447,34 @@ class RecipeApp:
                 messagebox.showinfo("No Recipes", "No suitable recipes found.")
                 return
 
-            message = f"Optimised Meal Suggestions for {target} servings:\n\n"
+            # count how many times each recipe was chosen
+            from collections import Counter
+            recipe_counts = Counter(r.title for r in recipes)
+
+            # get unique recipes in order
+            unique_recipes = []
+            seen = set()
+            for r in recipes:
+                if r.title not in seen:
+                    unique_recipes.append(r)
+                    seen.add(r.title)
+
+       
+            message = f"Optimised Meal Suggestions for exactly {target} servings:\n\n"
             total_combined_cost = 0.0
             total_combined_servings = 0
-
-            for r in recipes:
-                total_cost = r.total_recipe_cost
+            
+            for r in unique_recipes:
+                count = recipe_counts[r.title]
+                total_servings = r.servings * count
+                total_cost = r.total_recipe_cost * count
                 cost_per_serving = r.cost_per_serving()
+
                 total_combined_cost += total_cost
-                total_combined_servings += r.servings
+                total_combined_servings += total_servings
+
                 message += (
-                    f"{r.title} — Servings: {r.servings}\n"
+                    f"{r.title} (x{count}) — Total Servings: {total_servings}\n"
                     f"  • Total Cost: £{total_cost:.2f}\n"
                     f"  • Cost per Serving: £{cost_per_serving:.2f}\n\n"
                 )
@@ -461,6 +484,8 @@ class RecipeApp:
 
         except Exception as e:
             messagebox.showerror("Error", str(e))
+
+  
 
 
 
