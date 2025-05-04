@@ -114,18 +114,21 @@ class RecipeManager:
     def from_dict(self, data):
         self.recipes.clear()
         for r in data:
-            recipe = Recipe(
-                r["title"], r["description"], r["servings"],
-                r["cuisine"], r["category"],
-                rating=r.get("rating"), notes=r.get("notes"), image_path=r.get("image_path")
-            )
-            for ing in r["ingredients"]:
-                cost = ing.get("cost_per_unit", 0.0)
-                recipe.add_ingredient(Ingredient(ing["name"], ing["quantity"], ing["unit"], cost))
+            try:
+                recipe = Recipe(
+                    r["title"], r["description"], r["servings"],
+                    r["cuisine"], r["category"],
+                    rating=r.get("rating"), notes=r.get("notes"), image_path=r.get("image_path")
+                    )
+                for ing in r["ingredients"]:
+                    cost = ing.get("cost_per_unit", 0.0)
+                    recipe.add_ingredient(Ingredient(ing["name"], ing["quantity"], ing["unit"], cost))
+                for step in r["steps"]:
+                    recipe.add_step(step)
+                self.add_recipe(recipe)
+            except Exception as e:
+                print(f"Error loading recipe: {r.get('title', 'Unknown')} - {e}")
 
-            for step in r["steps"]:
-                recipe.add_step(step)
-            self.add_recipe(recipe)
 
     def save_to_file(self, filename="recipes.json"):
         with open(filename, "w") as f:
@@ -140,7 +143,8 @@ class RecipeManager:
             pass
 
     def add_recipe(self, recipe):
-        if not any(r.title.lower() == recipe.title.lower() for r in self.recipes):
+        if not any(isinstance(r, Recipe) and r.title and r.title.lower() == recipe.title.lower() for r in self.recipes):
+
             self.recipes.append(recipe)
 
     def remove_recipe(self, recipe_title):
@@ -340,8 +344,7 @@ class ShoppingListManager:
         except FileNotFoundError:
             pass
 
-import tkinter as tk
-from tkinter import simpledialog, messagebox, ttk
+
 
 class RecipeApp:
     def __init__(self, root):
@@ -447,7 +450,9 @@ class RecipeApp:
     
         while messagebox.askyesno("Ingredient", "Add ingredient?"):
             name = simpledialog.askstring("Ingredient", "Name:")
-            qty = simpledialog.askfloat("Ingredient", "Quantity:")
+            qty_str = simpledialog.askstring("Ingredient", "Quantity:")
+            qty = float(qty_str) if qty_str else 0.0
+
             unit = simpledialog.askstring("Ingredient", "Unit:")
             recipe.add_ingredient(Ingredient(name, qty, unit))
         
@@ -558,20 +563,21 @@ class RecipeApp:
                 self.recipe_text.insert(tk.END, f"\n🖼️ Image Path: {recipe.image_path}\n")
 
     def generate_shopping_list(self):
-        date = simpledialog.askstring("Shopping List", "Enter date (YYYY-MM-DD):")
-        meals = self.planner.get_meals_for_date(date)
-        if not meals:
-            messagebox.showinfo("List", "No meals planned.")
-            return
-        items = self.shopper.generate_list(meals)
-        self.shopping_list_manager.save_list(date, items)
+         date = simpledialog.askstring("Shopping List", "Enter date (YYYY-MM-DD):")
+         meals = self.planner.get_meals_for_date(date)
+         if not meals:
+             messagebox.showinfo("List", "No meals planned.")
+             return
+         items = self.shopper.generate_list(meals)
+         self.shopping_list_manager.save_list(date, items)
+ 
+         unique_items = list(dict.fromkeys(items))  
+ 
+         self.recipe_text.delete(1.0, tk.END)
+         self.recipe_text.insert(tk.END, f"🛒 Shopping List for {date}\n\n")
+         for item in unique_items:
+             self.recipe_text.insert(tk.END, f" - {item}\n")
 
-        unique_items = list(dict.fromkeys(items))  
-
-        self.recipe_text.delete(1.0, tk.END)
-        self.recipe_text.insert(tk.END, f"🛒 Shopping List for {date}\n\n")
-        for item in unique_items:
-            self.recipe_text.insert(tk.END, f" - {item}\n")
 
 
     def edit_recipe(self):
@@ -598,7 +604,10 @@ class RecipeApp:
             recipe.ingredients = []
             while messagebox.askyesno("Ingredient", "Add ingredient?"):
                 name = simpledialog.askstring("Ingredient", "Name:")
-                qty = simpledialog.askfloat("Ingredient", "Quantity:")
+                qty_str = simpledialog.askstring("Ingredient", "Quantity:")
+                qty = float(qty_str) if qty_str else 0.0
+
+
                 unit = simpledialog.askstring("Ingredient", "Unit:")
                 cost = simpledialog.askfloat("Ingredient", "Cost per unit:", minvalue=0.0)
                 recipe.add_ingredient(Ingredient(name, qty, unit, cost))

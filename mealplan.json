@@ -1,1 +1,24 @@
-{}
+{
+  "2025-05-01": [
+    {
+      "title": "Spaghetti Bolognese",
+      "description": "A classic Italian pasta dish",
+      "servings": 4,
+      "cuisine": "",
+      "category": "",
+      "ingredients": [
+        {
+          "name": "Spaghetti",
+          "quantity": 400.0,
+          "unit": "g"
+        }
+      ],
+      "steps": [
+        "Cook spaghetti until al dente"
+      ],
+      "rating": 7.0,
+      "notes": "grhmrokg",
+      "image_path": "fbklgrm"
+    }
+  ]
+}
