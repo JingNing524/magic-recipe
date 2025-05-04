@@ -199,13 +199,15 @@ class RecipeManager:
         collected = []
 
         for ing in recipe.ingredients:
-            sub_recipe = next((r for r in self.recipes if r.title.lower() == ing.name.lower()), None)
+            
+            sub_recipe = next((r for r in self.recipes if r.title == ing.name), None)
             if sub_recipe:
                 collected += self.get_all_ingredients_recursive(sub_recipe.title, visited)
             else:
                 collected.append(ing)
 
         return collected
+
     
     from itertools import combinations
 
