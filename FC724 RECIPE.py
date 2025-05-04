@@ -25,7 +25,7 @@ class Ingredient:
 # Recipe class
 class Recipe:
     def __init__(self, title, description, servings, cuisine, category,
-                 ingredients=None, steps=None, rating=None, notes=None, image_path=None):
+                 ingredients=None, steps=None, rating=None, notes=None, image_path=None, total_cost=0.0):
         self.title = title
         self.description = description
         self.servings = servings
@@ -36,6 +36,7 @@ class Recipe:
         self.rating = rating
         self.notes = notes
         self.image_path = image_path
+        self.total_recipe_cost = total_cost  # NEW field
 
     def add_ingredient(self, ingredient):
         self.ingredients.append(ingredient)
@@ -51,18 +52,24 @@ class Recipe:
     def remove_step(self, step_number):
         if 0 <= step_number < len(self.steps):
             self.steps.pop(step_number)
-        else:
-            print("Invalid step number.")
 
     def update_servings(self, new_servings):
         if new_servings <= 0:
-            print("New servings must be greater than 0.")
             return
         factor = new_servings / self.servings
         for ing in self.ingredients:
             ing.quantity *= factor
         self.servings = new_servings
 
+    def cost_per_serving(self):
+        return self.total_recipe_cost / self.servings if self.servings else 0
+
+
+
+
+
+    
+    
     def display(self):
         print(f"\n--- {self.title} ---")
         print(f"Description: {self.description}")
@@ -99,7 +106,9 @@ class RecipeManager:
                 "ingredients": [
                         {"name": i.name, "quantity": i.quantity, "unit": i.unit, "cost_per_unit": i.cost_per_unit} for i in r.ingredients
                     ],
-                "steps": r.steps
+                "steps": r.steps,
+                "total_cost": r.total_recipe_cost
+
             }
             if r.rating is not None:
                 recipe_data["rating"] = r.rating
@@ -118,8 +127,12 @@ class RecipeManager:
                 recipe = Recipe(
                     r["title"], r["description"], r["servings"],
                     r["cuisine"], r["category"],
-                    rating=r.get("rating"), notes=r.get("notes"), image_path=r.get("image_path")
+                    rating=r.get("rating"),
+                    notes=r.get("notes"),
+                    image_path=r.get("image_path"),
+                    total_cost=r.get("total_cost", 0.0)  
                     )
+
                 for ing in r["ingredients"]:
                     cost = ing.get("cost_per_unit", 0.0)
                     recipe.add_ingredient(Ingredient(ing["name"], ing["quantity"], ing["unit"], cost))
@@ -421,13 +434,45 @@ class RecipeApp:
                 return
             target = int(target)
             recipes = self.manager.select_cheapest_meals(target)
-            if recipes:
-                message = "Selected Recipes:\n\n" + "\n".join(r.title for r in recipes)
-                messagebox.showinfo("Optimised Meal Plan", message)
-            else:
+            if not recipes:
                 messagebox.showinfo("No Recipes", "No suitable recipes found.")
+                return
+
+        
+            date = simpledialog.askstring("Meal Plan Date", "Enter date to save the plan (YYYY-MM-DD):")
+            if not date:
+                return
+
+        
+            for r in recipes:
+                self.planner.add_meal(date, r)
+
+        
+            message = f"Saved Optimised Plan for {date}:\n\n"
+            total_combined_cost = 0.0
+            total_combined_servings = 0
+
+            for r in recipes:
+                total_cost = sum(i.total_cost() for i in r.ingredients)
+                cost_per_serving = total_cost / r.servings if r.servings else 0
+                total_combined_cost += total_cost
+                total_combined_servings += r.servings
+                message += (
+                    f"{r.title} — Servings: {r.servings}\n"
+                    f"  • Total Cost: ${total_cost:.2f}\n"
+                    f"  • Cost per Serving: ${cost_per_serving:.2f}\n\n"
+                )
+
+            message += f"📊 Combined Cost: ${total_combined_cost:.2f} for {total_combined_servings} servings"
+            messagebox.showinfo("Optimised Meal Plan", message)
+
+        
+            self.planner.save_to_file()
+
         except Exception as e:
             messagebox.showerror("Error", str(e))
+
+
 
 
     def refresh_recipe_list(self):
@@ -447,15 +492,14 @@ class RecipeApp:
         category = simpledialog.askstring("Category", "Meal category:")
 
         recipe = Recipe(title, desc, servings, cuisine, category)
-    
+
         while messagebox.askyesno("Ingredient", "Add ingredient?"):
             name = simpledialog.askstring("Ingredient", "Name:")
             qty_str = simpledialog.askstring("Ingredient", "Quantity:")
             qty = float(qty_str) if qty_str else 0.0
-
             unit = simpledialog.askstring("Ingredient", "Unit:")
             recipe.add_ingredient(Ingredient(name, qty, unit))
-        
+
         while messagebox.askyesno("Step", "Add step?"):
             step = simpledialog.askstring("Step", "Description:")
             recipe.add_step(step)
@@ -464,9 +508,12 @@ class RecipeApp:
         notes = simpledialog.askstring("Notes", "Any notes?")
         image_path = simpledialog.askstring("Image Path", "Path to image?")
 
+        total_cost = simpledialog.askfloat("Total Cost", "Enter total cost of the recipe:", minvalue=0.0)
+
         recipe.rating = rating
         recipe.notes = notes
         recipe.image_path = image_path
+        recipe.total_recipe_cost = total_cost if total_cost else 0.0
 
         self.manager.add_recipe(recipe)
         self.refresh_recipe_list()
@@ -485,7 +532,8 @@ class RecipeApp:
         self.recipe_text.insert(tk.END, f"🍽️ {recipe.title}\n")
         self.recipe_text.insert(tk.END, f"(👩🏻‍💻{recipe.description})\n\n")
         self.recipe_text.insert(tk.END, f"Servings: {recipe.servings} | Cuisine: {recipe.cuisine} | Category: {recipe.category}\n")
-    
+        self.recipe_text.insert(tk.END, f"💰 Total Cost: £{recipe.total_recipe_cost:.2f} | Cost per Serving: £{recipe.cost_per_serving():.2f}\n")
+
         if recipe.rating is not None:
             self.recipe_text.insert(tk.END, f"⭐ Rating: {recipe.rating}/10\n")
 
@@ -630,6 +678,8 @@ class RecipeApp:
         recipe.rating = rating
         recipe.notes = notes
         recipe.image_path = image_path
+        cost = simpledialog.askfloat("Total Cost", "Enter total cost of the recipe:", initialvalue=recipe.total_recipe_cost)
+        recipe.total_recipe_cost = cost if cost else 0.0
 
         self.refresh_recipe_list()
         messagebox.showinfo("Updated", "Recipe updated successfully.")

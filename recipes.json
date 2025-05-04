@@ -16,6 +16,7 @@
     "steps": [
       "Cook spaghetti until al dente"
     ],
+    "total_cost": 0.0,
     "rating": 7.0,
     "notes": "grhmrokg",
     "image_path": "fbklgrm"
@@ -54,6 +55,7 @@
       "Cut the sandwich in half and serve.",
       null
     ],
+    "total_cost": 0.0,
     "rating": 7.0,
     "notes": "You can use smooth or crunchy peanut butter. For extra flavour, try toasting the bread lightly",
     "image_path": "no"
@@ -104,6 +106,7 @@
       "Cook, stirring gently with a spatula, until the eggs are set but still slightly moist",
       "Remove from heat and serve immediately"
     ],
+    "total_cost": 0.0,
     "rating": 10.0,
     "notes": "no",
     "image_path": "pp"
@@ -181,8 +184,61 @@
       "Cut the sandwich in half and serve.",
       null
     ],
+    "total_cost": 0.0,
     "rating": 6.0,
     "notes": "You can add other ingredients like sweetcorn, chopped pickles, or hard-boiled eggs to the tuna salad. Use your favourite type of bread",
     "image_path": "vvvv"
+  },
+  {
+    "title": "Quick Chicken Stir-Fry",
+    "description": "A simple and flavourful Asian-inspired stir-fry.",
+    "servings": 2,
+    "cuisine": "Asian",
+    "category": "Dinner",
+    "ingredients": [
+      {
+        "name": "Chicken breast",
+        "quantity": 300.0,
+        "unit": "g",
+        "cost_per_unit": 0.0
+      },
+      {
+        "name": "Mixed vegetables",
+        "quantity": 200.0,
+        "unit": "g",
+        "cost_per_unit": 0.0
+      },
+      {
+        "name": "Soy sauce",
+        "quantity": 2.0,
+        "unit": "tbsp",
+        "cost_per_unit": 0.0
+      },
+      {
+        "name": "Sesame oil",
+        "quantity": 1.0,
+        "unit": "tbsp",
+        "cost_per_unit": 0.0
+      },
+      {
+        "name": "Rice",
+        "quantity": 150.0,
+        "unit": "g",
+        "cost_per_unit": 0.0
+      }
+    ],
+    "steps": [
+      "Cook rice according to package instructions",
+      "Cut chicken breast into bite-sized pieces.",
+      "Heat sesame oil in a pan or wok.",
+      "Stir-fry chicken until cooked through",
+      "Add mixed vegetables and stir-fry until tender-crisp",
+      "Pour in soy sauce and toss to coat.",
+      "Serve hot with cooked rice"
+    ],
+    "total_cost": 0.0,
+    "rating": 5.0,
+    "notes": "Add garlic, ginger, or other seasonings to taste. You can also use different vegetables or protein.",
+    "image_path": "v"
   }
 ]
