@@ -1,6 +1,5 @@
-#Interactive Recipe Manager
-
-
+from manager import RecipeManager, MealPlanner, ShoppingListGenerator, ShoppingListManager
+from recipe import Recipe, Ingredient
 
 import json   #for saving and loading data
 import os   #for checking if files exist
@@ -8,425 +7,6 @@ import tkinter as tk
 from tkinter import simpledialog, messagebox, ttk
 from collections import defaultdict   #dictionary that makes defult values
 from itertools import combinations   # use for generating combinations of item
-
-
-
-class Ingredient:
-    def __init__(self, name, quantity, unit, cost_per_unit=0.0):
-        self.name = name
-        self.quantity = quantity   #amount use of ingridient
-        self.unit = unit
-        self.cost_per_unit=cost_per_unit
-
-    def display(self):
-        # returrn a string to show the ingredient
-        return f"{self.quantity} {self.unit} {self.name}"
-    
-    def total_cost(self):
-        #caculate total cost of the ingredient
-        quantity = self.quantity if self.quantity is not None else 0
-        cost = self.cost_per_unit if self.cost_per_unit is not None else 0
-        return quantity * cost   #total=quantity*cost per unit
-    
-    
-
-class Recipe:
-    def __init__(self, title, description, servings, cuisine, category,
-                 ingredients=None, steps=None, rating=None, notes=None, image_path=None, total_cost=0.0):
-        self.title = title
-        self.description = description
-        self.servings = servings
-        self.cuisine = cuisine
-        self.category = category
-        self.ingredients = ingredients if ingredients else []   #list of Ingredient objects
-        self.steps = steps if steps else []   #list of steps to make recipe
-        self.rating = rating   #this is optional for user rating
-        self.notes = notes   #optional foe user's notes
-        self.image_path = image_path   #optional 
-        self.total_recipe_cost = total_cost  
-
-    def add_ingredient(self, ingredient):
-        #add an ingredient object to the list  of ingredients
-        self.ingredients.append(ingredient)
-
-    def remove_ingredient(self, ingredient_name):
-        #remove an ingredient from the list by name(ignore if it is capital letetr or not)
-        self.ingredients = [
-            ing for ing in self.ingredients if ing.name.lower() != ingredient_name.lower()
-        ]
-
-    def add_step(self, step):
-        #add cooking steps to the steps list
-        self.steps.append(step)
-
-    def remove_step(self, step_number):
-        #removea step by its index in valid range
-        if 0 <= step_number < len(self.steps):
-            self.steps.pop(step_number)
-
-    def update_servings(self, new_servings):
-        #adjust ingredient quantities when the number of serving changes
-        if new_servings <= 0:
-            return   #do nothing if the new value is invalid
-        factor = new_servings / self.servings
-        for ing in self.ingredients:
-            ing.quantity *= factor   #scale each ingredient's quantity
-        self.servings = new_servings   #update the servings
-
-    def cost_per_serving(self):
-        #caculate cost per serving safely and avoid dividing by zero
-        return self.total_recipe_cost / self.servings if self.servings else 0
-
-    @classmethod
-    def from_dict(cls, data):
-    #when loading from file create a Recipe object from a dictionary
-        ingredients = [
-            Ingredient(i["name"], i["quantity"], i["unit"], i.get("cost_per_unit", 0.0))
-            for i in data.get("ingredients", [])
-        ]
-        return cls(
-            title=data["title"],
-            description=data.get("description", ""),
-            servings=data.get("servings", 1),
-            cuisine=data.get("cuisine", ""),
-            category=data.get("category", ""),
-            ingredients=ingredients,
-            steps=data.get("steps", []),
-            rating=data.get("rating"),
-            notes=data.get("notes"),
-            image_path=data.get("image_path"),
-            total_cost=data.get("total_cost", 0.0)
-        )
-
-
-
-    def display(self):
-        #print the recipe details in a readable format
-        print(f"\n--- {self.title} ---")
-        print(f"Description: {self.description}")
-        print(f"Servings: {self.servings}")
-        print(f"Cuisine: {self.cuisine}")
-        print(f"Category: {self.category}")
-        print("\nIngredients:")
-        for ing in self.ingredients:
-            print(f" - {ing.display()}")
-        print("\nSteps:")
-        for idx, step in enumerate(self.steps, 1):
-            print(f"{idx}. {step}")
-        if self.rating is not None:
-            print(f"\nRating: {self.rating}/5")
-        if self.notes:
-            print(f"Notes: {self.notes}")
-        if self.image_path:
-            print(f"Image Path: {self.image_path}")
-
-#class to manage all recipes
-class RecipeManager:
-    def __init__(self):
-        self.recipes = []   #list to store all Recipe objects
-        self.load_from_file()   #load recipes from file when startin
-        
-    def to_dict(self):
-        #convert all recipes into a list of dictionaries for saving
-        recipe_dicts = []
-        for r in self.recipes:
-            recipe_data = {
-                "title": r.title,
-                "description": r.description,
-                "servings": r.servings,
-                "cuisine": r.cuisine,
-                "category": r.category,
-                "ingredients": [
-                        {"name": i.name, "quantity": i.quantity, "unit": i.unit, "cost_per_unit": i.cost_per_unit} for i in r.ingredients
-                    ],
-                "steps": r.steps,
-                "total_cost": r.total_recipe_cost
-
-            }
-            if r.rating is not None:
-                recipe_data["rating"] = r.rating
-            if r.notes:
-                recipe_data["notes"] = r.notes
-            if r.image_path:
-                recipe_data["image_path"] = r.image_path
-            recipe_dicts.append(recipe_data)
-        return recipe_dicts   #return list of recipe dictionaries
-
-
-   
-    def from_dict(self, data):
-        #create recipe objects from loaded dictionary data
-        self.recipes = [Recipe.from_dict(item) for item in data]     
-
-    def save_to_file(self, filename="recipes.json"):
-        # save all recipes to a JSON file
-        try:
-             with open(filename, "w") as f:
-                 json.dump(self.to_dict(), f, indent=4) # Use indent for readability
-        except IOError as e:
-            print(f"Error saving to {filename}: {e}")
-
-    def load_from_file(self, filename="recipes.json"):
-        #load recipes from a JSON file if it exists and is not empty
-        try:
-            with open(filename, "r") as f:
-                if os.path.getsize(filename) > 0:   #the files cannot be empty
-                     data = json.load(f)
-                     self.from_dict(data)
-                else:
-                     self.recipes = []   #empty files no recipes
-        except FileNotFoundError:
-             self.recipes = []   #ifnno file exist , start with empty list
-        except json.JSONDecodeError:
-             print(f"Error decoding JSON from {filename}. The file may be corrupted or empty.")
-             self.recipes = []
-        
-
-    def add_recipe(self, recipe):
-        #add new recipe by title only if it is not already exist in the list
-        if not any(isinstance(r, Recipe) and r.title and r.title.lower() == recipe.title.lower() for r in self.recipes):
-            self.recipes.append(recipe)
-
-    def remove_recipe(self, recipe_title):
-        #remove recipe by title (ignore capital letter or not)
-        self.recipes = [r for r in self.recipes if r.title.lower() != recipe_title.lower()]
-
-    def search_recipes(self, query):
-        #search recipes by title or igredient name
-        query = query.lower()
-        results = []
-        for recipe in self.recipes:
-            if query in recipe.title.lower():
-                results.append(recipe)
-            elif any(query in ing.name.lower() for ing in recipe.ingredients):
-                results.append(recipe)
-        return results
-
-    def filter_recipes(self, cuisine=None, category=None, rating=None):
-        #filter recipes by cuisine, category, and/or rating
-        results = self.recipes
-        if cuisine:
-            results = [r for r in results if r.cuisine.lower() == cuisine.lower()]
-        if category:
-            results = [r for r in results if r.category.lower() == category.lower()]
-        if rating:
-            results = [r for r in results if r.rating and r.rating >= rating]
-        return results
-    
-    def get_all_ingredients_recursive(self, recipe_title, visited=None):
-        #recursively get all ingredients, including sub-recipes
-        if visited is None:
-            visited = set()
-
-        recipe = next((r for r in self.recipes if r.title == recipe_title), None)
-        if not recipe or recipe.title in visited:
-            return []
-
-        visited.add(recipe.title)
-        collected = []
-
-        for ing in recipe.ingredients:
-            
-            #go deeper if ingredient is another recipe
-            sub_recipe = next((r for r in self.recipes if r.title == ing.name), None)
-            if sub_recipe:
-                collected += self.get_all_ingredients_recursive(sub_recipe.title, visited)
-            else:
-                collected.append(ing)
-
-        return collected
-
-    #mealplanning cheastest combination    
-    from itertools import combinations
-
-    def select_cheapest_meals(self, target_servings):
-        # try all combinations of 1 to len(recipes) recipes
-        valid_combinations = []
-
-        for r in range(1, len(self.recipes) + 1):
-            for combo in combinations(self.recipes, r):
-                total_servings = sum(recipe.servings for recipe in combo)
-                if total_servings == target_servings:
-                    total_cost = sum(recipe.total_recipe_cost for recipe in combo)
-                    valid_combinations.append((combo, total_cost))
-
-        # return the cheapest valid combo, if any
-        if valid_combinations:
-            best_combo = min(valid_combinations, key=lambda x: x[1])
-            return best_combo[0]  # just return the recipes no cost
-        return []
-
-
-
-
-    def display_all_recipes(self):
-        #print the titles of all saved recipes
-        if not self.recipes:
-            print("No recipes found.")
-        else:
-            print("Recipes:")
-            for i, recipe in enumerate(self.recipes, 1):
-                print(f"{i}. {recipe.title}")
-    
-    
-
-
-
-class MealPlanner:
-    def __init__(self, recipe_manager):
-        self.planned_meals = defaultdict(list)   #store recipes by date
-        self.load_from_file(recipe_manager)   #load previous meal plan
-        
-        
-    def add_meal(self, date, recipe):
-        #add a recipe to a specific date
-        self.planned_meals[date].append(recipe)
-
-    def remove_meal(self, date, recipe_title):
-        #remove a recipe from a date's plan by title
-        self.planned_meals[date] = [
-            r for r in self.planned_meals[date] if r.title.lower() != recipe_title.lower()
-        ]
-        if not self.planned_meals[date]:   #remove date entry if no meals left
-            del self.planned_meals[date]
-
-    def get_meals_for_date(self, date):
-        #get a list of planned meals for a given date
-        return self.planned_meals.get(date, [])
-
-    def display_schedule(self):
-        #print all planned meals in date order
-        for date, recipes in sorted(self.planned_meals.items()):
-            print(f"\n📅 {date}:")
-            for recipe in recipes:
-                print(f" - {recipe.title}")
-
-    def to_dict(self):
-        #convert meal plan to dictionary format for saving
-        return {
-            'planned_meals': {
-                day: [recipe.id for recipe in recipes]
-                for day, recipes in self.planned_meals.items()
-                }
-            }
- 
-
-
-
-
-    def from_dict(self, data,recipe_manager):
-        #load planned meals from a dictionary by using recipe IDs
-        self.planned_meals = defaultdict(list)
-        for day, recipes in data.get('planned_meals', {}).items():
-             self.planned_meals[day] = [recipe_manager.get_recipe_by_id(recipe_id) for recipe_id in recipes if recipe_manager.get_recipe_by_id(recipe_id)]
- 
-
-    def save_to_file(self, filename="mealplan.json"):
-        #save meal plan data to a JSON file
-        try:
-             with open(filename, "w") as f:
-                 json.dump(self.to_dict(), f, indent=4)
-        except IOError as e:
-             print(f"Error saving to {filename}: {e}")
-
-    def load_from_file(self, recipe_manager, filename="mealplan.json"):
-        # load meal plan data from file
-        try:
-             with open(filename, "r") as f:
-                 if os.path.getsize(filename) > 0:
-                     data = json.load(f)
-                     self.from_dict(data, recipe_manager)
-                 else:
-                     self.planned_meals = defaultdict(list)
-        except FileNotFoundError:
-             self.planned_meals = defaultdict(list)
-        except json.JSONDecodeError:
-             print(f"Error decoding JSON from {filename}. The file may be corrupted or empty.")
-             self.planned_meals = defaultdict(list)
-
-
-
-
-
-
-
-from collections import defaultdict
-
-#makes sure duplicate ingredients are added together and help to clearify what to buy
-class ShoppingListGenerator:
-    def __init__(self, recipe_manager):
-        self.recipe_manager = recipe_manager
-    
-    def generate_list(self, recipes):
-        #creates a shopping list by combining all ingredients from selected recipes
-        from collections import defaultdict
-        shopping_list = defaultdict(lambda: defaultdict(float))
-        
-        for recipe in recipes:
-            for ing in recipe.ingredients:
-                shopping_list[ing.name][ing.unit] += ing.quantity   #add quantities together
-
-        
-        #turn the nested dictionary into a readable list
-        formatted_list = []
-        for name, units in shopping_list.items():
-            for unit, qty in units.items():
-                formatted_list.append(f"{qty:.2f} {unit} {name}")
-        return formatted_list
-
-
-
-    def display_list(self, shopping_list):
-        #print the shopping list
-        print("\n🛒 Shopping List:")
-        for item in shopping_list:
-            print(f" - {item}")
-
-class ShoppingListManager:
-    def __init__(self):
-        self.list_by_date = {}   #dic to store shopping list per date
-        self.load_from_file()
-
-    def save_list(self, date, items):
-        #save list for a specific date
-        self.list_by_date[date] = items
-
-    def get_list(self, date):
-        #get saved shopping list for a date
-        return {'shopping_list': self.list_by_date}
-
-    def to_dict(self):
-        #convert list-by-date dictionary to savable format
-        return self.list_by_date
-
-    def from_dict(self, data):
-        #load shopping list data from dictionary
-        self.list_by_date = data.get('shopping_list', {})
-
-    def save_to_file(self, filename="shoppinglist.json"):
-        #save shopping lists to file
-        try:
-             with open(filename, "w") as f:
-                 json.dump(self.to_dict(), f, indent=4)
-        except IOError as e:
-             print(f"Error saving to {filename}: {e}")
-
-    def load_from_file(self, filename="shoppinglist.json"):
-        #load shopping lists from file
-         try:
-             with open(filename, "r") as f:
-                 if os.path.getsize(filename) > 0:
-                     data = json.load(f)
-                     self.from_dict(data)
-                 else:
-                     self.list_by_date = {}
-         except FileNotFoundError:
-             self.list_by_date = {}
-         except json.JSONDecodeError:
-             print(f"Error decoding JSON from {filename}. The file may be corrupted or empty.")
-             self.list_by_date = {}
-
-
 
 class RecipeApp:
     def __init__(self, master):
@@ -440,10 +20,10 @@ class RecipeApp:
         self.setup_gui()   #build GUI layout
         self.refresh_recipe_list()   #update the list shown on screen
         self.root.protocol("WM_DELETE_WINDOW", self.close_application)   #window close
-        self.update_recipe_list()   #update recipe list UI
-        self.update_meal_plan_display()   #show meal plan in UI
-        self.update_shopping_list_display()   #show shopping list in UI
+        self.refresh_recipe_list()   #update recipe list UI
         
+
+
     def load_data(self):
         #load all saved data from files
          self.recipe_manager.load_from_file()
@@ -590,7 +170,7 @@ class RecipeApp:
         self.recipe_listbox.delete(0, tk.END)
         seen=set()
         for r in self.recipe_manager.recipes:
-            if r.title.lower() not in seen:
+            if r and r.title and r.title.lower() not in seen:
                 self.recipe_listbox.insert(tk.END, r.title)
                 seen.add(r.title.lower())
     def add_recipe(self):
@@ -699,6 +279,13 @@ class RecipeApp:
             recipe = next((r for r in self.recipe_manager.recipes if r.title == title), None)
             if recipe:
                 self.meal_planner.add_meal(date, recipe)
+                self.meal_planner.save_to_file()
+                # Generate shopping list for this date using all planned meals
+                meals = self.meal_planner.get_meals_for_date(date)
+                items = self.shopper.generate_list(meals)
+                self.shopping_list_manager.save_list(date, items)
+                self.shopping_list_manager.save_to_file()
+                
                 messagebox.showinfo("Planned", f"Added {title} to {date}")
                 plan_window.destroy()
 
@@ -718,7 +305,7 @@ class RecipeApp:
         self.recipe_text.insert(tk.END, f"📅 {date} Meal Plan\n\n")
 
         for title in meals:
-            recipe = next((r for r in self.recipe_manager.recipes if r.title == title), None)
+            recipe = next((r for r in self.recipe_manager.recipes if r.title and r.title.lower() == title.lower()), None)
             if not recipe:
                 continue
             
@@ -740,27 +327,42 @@ class RecipeApp:
                 self.recipe_text.insert(tk.END, f"\n🖼️ Image Path: {recipe.image_path}\n")
 
     def generate_shopping_list(self):
-        #ask user for the date
-         date = simpledialog.askstring("Shopping List", "Enter date (YYYY-MM-DD):")
-         meals = self.meal_planner.get_meals_for_date(date)
-         if not meals:
-             messagebox.showinfo("List", "No meals planned.")
-             return
-         
-         #generate list from planned meals
-         items = self.shopper.generate_list(meals)
-         
-         #save list to manager
-         self.shopping_list_manager.save_list(date, items)
-         
-         #remove duplicates while keeping order
-         unique_items = list(dict.fromkeys(items))  
- 
-         #show the list in the text area
-         self.recipe_text.delete(1.0, tk.END)
-         self.recipe_text.insert(tk.END, f"🛒 Shopping List for {date}\n\n")
-         for item in unique_items:
-             self.recipe_text.insert(tk.END, f" - {item}\n")
+        # ask user for the date
+        date = simpledialog.askstring("Shopping List", "Enter date (YYYY-MM-DD):")
+        titles = self.meal_planner.get_meals_for_date(date)
+        meals = [self.recipe_manager.get_recipe_by_title(title) for title in titles if self.recipe_manager.get_recipe_by_title(title)]
+
+        if not meals:
+            messagebox.showinfo("List", "No meals planned.")
+            return
+
+        # generate list from planned meals
+        items = self.shopper.generate_list(meals)
+        
+        # save list to manager
+        self.shopping_list_manager.save_list(date, items)
+        self.shopping_list_manager.save_to_file()
+
+        # remove duplicates while keeping order
+        unique_items = list(dict.fromkeys(items))  
+
+        # show the list in the text area
+        self.recipe_text.delete(1.0, tk.END)
+        self.recipe_text.insert(tk.END, f"🛒 Shopping List for {date}\n\n")
+        for item in unique_items:
+            self.recipe_text.insert(tk.END, f" - {item}\n")
+
+        # Show the generated shopping list in a popup
+        if items:
+            list_window = tk.Toplevel(self.root)
+            list_window.title(f"Shopping List for {date}")
+            text_widget = tk.Text(list_window, width=60, height=20)
+            text_widget.pack(padx=10, pady=10)
+            text_widget.insert("1.0", "\n".join(items))
+        else:
+            messagebox.showinfo("Info", "No items generated.")
+
+
 
 
 
@@ -837,15 +439,5 @@ class RecipeApp:
             #quit and destroy the Tkinter root window
             self.root.quit()
             self.root.after(100, self.root.destroy)
-            
-            
-            
- 
-if __name__ == "__main__":
-    root = tk.Tk()   #create the main application window
-    root.title("Recipe Manager")   #set the window title
-    app = RecipeApp(root)   #create the app
-    root.protocol("WM_DELETE_WINDOW", app.on_close)   #save before closing
-    root.mainloop()   #start the GUI loop
 
 

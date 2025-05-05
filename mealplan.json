@@ -1,3 +1,7 @@
 {
-    "planned_meals": {}
+    "planned_meals": {
+        "2025-05-01": [
+            "Spaghetti Bolognese"
+        ]
+    }
 }

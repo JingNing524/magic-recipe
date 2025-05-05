@@ -1,7 +1,7 @@
 [
     {
         "title": "Spaghetti Bolognese",
-        "description": "A classic Italian pasta dish.",
+        "description": "A classic Italian pasta dish",
         "servings": 4,
         "cuisine": "Italian",
         "category": "Dinner",
@@ -23,16 +23,22 @@
                 "quantity": 1.0,
                 "unit": "cup",
                 "cost_per_unit": 0.0
+            },
+            {
+                "name": null,
+                "quantity": 0.0,
+                "unit": null,
+                "cost_per_unit": 0.0
             }
         ],
         "steps": [
-            "Cook spaghetti until al dente.",
-            "Brown the ground beef.",
-            "Mix in tomato sauce and simmer.",
-            "Combine with spaghetti and serve",
-            null
+            "Cook spaghetti until al dente",
+            "Brown the ground beef",
+            "Mix in tomato sauce and simmer",
+            "Combine with spaghetti and serve"
         ],
         "total_cost": 10.0,
-        "rating": 6.0
+        "rating": 6.0,
+        "notes": "no"
     }
 ]
