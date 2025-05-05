@@ -702,7 +702,7 @@ class RecipeApp:
         servings = simpledialog.askinteger("Servings", "Servings:", initialvalue=recipe.servings)
         cuisine = simpledialog.askstring("Cuisine", "Cuisine type:", initialvalue=recipe.cuisine)
         category = simpledialog.askstring("Category", "Meal category:", initialvalue=recipe.category)
-        rating = simpledialog.askfloat("Rating", "Rating (1-5):", initialvalue=recipe.rating)
+        rating = simpledialog.askfloat("Rating", "Rating (1-10):", initialvalue=recipe.rating)
         notes = simpledialog.askstring("Notes", "Any notes?", initialvalue=recipe.notes)
         image_path = simpledialog.askstring("Image Path", "Path to image?", initialvalue=recipe.image_path)
 

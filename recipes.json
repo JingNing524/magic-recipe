@@ -1,35 +1,38 @@
 [
     {
         "title": "Spaghetti Bolognese",
-        "description": "A classic Italian pasta dish",
+        "description": "A classic Italian pasta dish.",
         "servings": 4,
         "cuisine": "Italian",
         "category": "Dinner",
-        "ingredients": [],
-        "steps": [],
-        "total_cost": 5.0,
-        "rating": 7.0,
-        "notes": "r",
-        "image_path": "r"
-    },
-    {
-        "title": "Quick Chicken Stir-Fry",
-        "description": "A simple and flavourful Asian-inspired stir-fry.",
-        "servings": 2,
-        "cuisine": "Asian",
-        "category": "Dinner",
         "ingredients": [
             {
-                "name": "Chicken breast",
-                "quantity": 300.0,
+                "name": "Spaghetti",
+                "quantity": 400.0,
                 "unit": "g",
+                "cost_per_unit": 0.0
+            },
+            {
+                "name": "Ground beef",
+                "quantity": 250.0,
+                "unit": "g",
+                "cost_per_unit": 0.0
+            },
+            {
+                "name": "Tomato sauce",
+                "quantity": 1.0,
+                "unit": "cup",
                 "cost_per_unit": 0.0
             }
         ],
-        "steps": [],
+        "steps": [
+            "Cook spaghetti until al dente.",
+            "Brown the ground beef.",
+            "Mix in tomato sauce and simmer.",
+            "Combine with spaghetti and serve",
+            null
+        ],
         "total_cost": 10.0,
-        "rating": 6.0,
-        "notes": "Add garlic, ginger, or other seasonings to taste. You can also use different vegetables or protein.",
-        "image_path": "bn"
+        "rating": 6.0
     }
 ]
