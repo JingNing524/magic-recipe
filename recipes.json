@@ -40,5 +40,41 @@
         "total_cost": 10.0,
         "rating": 6.0,
         "notes": "no"
+    },
+    {
+        "title": "microwave scrambled eggs",
+        "description": "",
+        "servings": 1,
+        "cuisine": "",
+        "category": "",
+        "ingredients": [
+            {
+                "name": "eggs",
+                "quantity": 2.0,
+                "unit": "",
+                "cost_per_unit": 0.0
+            },
+            {
+                "name": "milk (optional, for creaminess)",
+                "quantity": 1.0,
+                "unit": "tablespoon",
+                "cost_per_unit": 0.0
+            },
+            {
+                "name": "salt and pepper",
+                "quantity": 0.0,
+                "unit": "",
+                "cost_per_unit": 0.0
+            }
+        ],
+        "steps": [
+            "Prep the mug: If you like, put the butter in a microwave-safe mug and microwave for about 10 seconds until melted. Alternatively, lightly spray the mug with cooking oil",
+            "Whisk eggs: Crack the eggs into the mug. Add milk (if using), salt, and pepper. Whisk everything together with a fork until the yolks and whites are combined",
+            "Microwave: Microwave on high for 30 seconds",
+            "Stir: Take the mug out and stir the eggs with a fork",
+            "Microwave again: Microwave for another 30-60 seconds, or until the eggs look mostly set but are still a little moist. Cooking time can vary depending on your microwave"
+        ],
+        "total_cost": 0.5,
+        "rating": 10.0
     }
 ]
